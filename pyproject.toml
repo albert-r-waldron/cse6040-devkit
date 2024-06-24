@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cse6040_devkit"
+version = "0.0.1"
+authors = [
+  { name="Albert Waldron", email="albert.r.waldron@gmail.com" },
+]
+description = "Development kit for Ga Tech CSE6040"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools.package-data]
+"cse6040_devkit" = [""]
+"cse6040_devkit.templates" = ["*.jinja"]
+

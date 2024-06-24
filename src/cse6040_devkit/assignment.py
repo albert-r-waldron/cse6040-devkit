@@ -3,11 +3,10 @@ import os
 import nbformat as nbf
 import inspect
 from textwrap import dedent
-from test_case.sample_gen import SampleGenerator
+from cse6040_devkit.test_case.sample_gen import SampleGenerator
 from jinja2 import Environment, PackageLoader
-import plugins 
+import cse6040_devkit.plugins 
 import dill
-import templates
 
 class AssignmentBlueprint():
     def __init__(self):
@@ -256,7 +255,7 @@ class AssignmentBuilder(AssignmentBlueprint):
                 "grade_id": f"ex_{ex_num}",
                 "locked": True,
                 "points": ex['points'],
-                "solution": True
+                "solution": False
                 }})
             core_cells[f'{ex_name}.test'] = test_cell
         return deepcopy(core_cells)
