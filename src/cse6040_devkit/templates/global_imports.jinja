@@ -1,0 +1,4 @@
+### Global imports
+from cse6040_devkit import plugins
+{% if imports %}{% for import in imports%}{%if import.submodule%}from {{import.module}} import {{import.submodule}}{%else%}import {{import.module}} {%endif%}{%if import.alias %}as {{import.alias}}{%endif%}
+{% endfor %}{% endif %}

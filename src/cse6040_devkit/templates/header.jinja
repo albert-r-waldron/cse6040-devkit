@@ -1,0 +1,24 @@
+# `{{ assignment_name }}`: `{{ subtitle }}`
+_Version {{ version }}_
+
+*All of the header information is important. Please read it..*
+
+**Topics number of exercises:** This problem builds on your knowledge of `{{ topics }}`. It has **{{ exercises|length }}** exercises numbered 0 to **{{ (exercises|length) -1 }}**. There are **{{ total_points }}** available points. However to earn 100% the threshold is **{{ points_cap }}** points. (Therefore once you hit **{{ points_cap }}** points you can stop. There is no extra credit for exceeding this threshold.)
+
+**Exercise ordering:** Each exercise builds logically on previous exercises but you may solve them in any order. That is if you can't solve an exercise you can still move on and try the next one. Use this to your advantage as the exercises are **not** necessarily ordered in terms of difficulty. Higher point values generally indicate more difficult exercises. 
+
+**Demo cells:** Code cells starting with the comment `### define demo inputs` load results from prior exercises applied to the entire data set and use those to build demo inputs. These must be run for subsequent demos to work properly but they do not affect the test cells. The data loaded in these cells may be rather large (at least in terms of human readability). You are free to print or otherwise use Python to explore them but we may not print them in the starter code.
+
+**Debugging you code:** Right before each exercise test cell there is a block of text explaining the variables available to you for debugging. You may use these to test your code and can print/display them as needed (careful when printing large objects you may want to print the head or chunks of rows at a time).
+
+**Exercise point breakdown:**
+
+{% for ex_name, ex in exercises.items() %}
+- Exercise {{ loop.index - 1 }} - : **{{ ex.points }}** point(s)
+{% endfor %}
+
+**Final reminders:** 
+
+- Submit after **every exercise**
+- Review the generated grade report after you submit to see what errors were returned
+- Stay calm, skip problems as needed and take short breaks at your leisure

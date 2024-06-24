@@ -1,0 +1,8 @@
+{% if ex.helper %}### Helper Function
+{{ helper_source }}
+
+{% endif %}### Solution - Exercise {{ ex.num }}  
+{{ cleaned_soln_code }}{% if ex.demo %}
+
+### Demo function call
+{{ demo_source }}{%endif %}

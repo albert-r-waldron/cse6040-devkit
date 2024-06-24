@@ -1,0 +1,12 @@
+## Exercise {{ ex_num }}: ({{ ex.points }} points)
+**{{ ex_name }}**  
+
+{% if ex.solution %}**Your task:** define `{{ ex.solution.name }}` as follows:
+
+{{ ex.solution.docstring }}{% else %}**This is a free exercise!**  
+
+Please run the test cell below to collect your FREE point(s){% endif %}{% if ex.helper and ex.helper.docstring %}
+
+We have defined a **helper function**, `{{ ex.helper.name }}` as follows:  
+
+{{ ex.helper.docstring }}{% endif %}
