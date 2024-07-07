@@ -11,7 +11,6 @@ import dill
 class AssignmentBlueprint():
     def __init__(self):
         self.core = {}
-        self.plugins = {}
         if not os.path.exists('./resource/asnlib/publicdata'):
             os.makedirs('./resource/asnlib/publicdata')
         if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
@@ -48,19 +47,6 @@ class AssignmentBlueprint():
             return func
         return _register_function
     
-    def register_plugin(self):
-        def _register_plugin(func):
-            plugin_name = func.__name__
-            plugin_path = f'resource/asnlib/publicdata/plugin.{plugin_name}.dill'
-            self.plugins[plugin_name] = plugin_path
-            # set the attribute locally in case it's needed in the source files
-            setattr(cse6040_devkit.plugins, plugin_name, func)
-            # dump it to a file
-            with open(plugin_path, 'wb') as f:
-                dill.dump(func, f)
-            return func
-        return _register_plugin
-    
     def register_solution(self, ex_name):
         return self.register_notebook_function(ex_name, 'solution')
     
@@ -77,11 +63,11 @@ class AssignmentBlueprint():
             visible_path = f'resource/asnlib/publicdata/tc_{ex_name}'
             hidden_path = f'resource/asnlib/publicdata/encrypted/tc_{ex_name}'
             if plugin:
-                if plugin not in dir(cse6040_devkit.plugins):
+                if plugin not in dir(plugins):
                     raise ModuleNotFoundError(f'The plugin {plugin} is not defined in the plugins file.')
                 plugged_in_name = f'plugins.{plugin}({sol_func.__name__}{", **plugin_kwargs" if plugin_kwargs else ""})'
                 self.core[ex_name]['test']['sol_func_name'] = plugged_in_name
-                tc_gen = SampleGenerator(getattr(cse6040_devkit.plugins, plugin)(sol_func, **plugin_kwargs), sampler_func, output_names)
+                tc_gen = SampleGenerator(getattr(plugins, plugin)(sol_func, **plugin_kwargs), sampler_func, output_names)
             else:
                 self.core[ex_name]['test']['sol_func_name'] = sol_func.__name__
                 tc_gen = SampleGenerator(sol_func, sampler_func, output_names)
@@ -105,7 +91,6 @@ class AssignmentBuilder(AssignmentBlueprint):
         self.config_path = config_path
         self.notebook_path = notebook_path
         self.core = {}
-        self.plugins = {}
         if os.path.exists(config_path):
             with open(config_path) as f:
                 self.config = yaml.safe_load(f)
@@ -132,7 +117,6 @@ class AssignmentBuilder(AssignmentBlueprint):
             else:
                 # new exercise in the other core
                 self.core[ex_name] = other.core[ex_name]
-        self.plugins.update(other.plugins)
 
     def register_blueprints(self, others):
         for other in others:
@@ -218,8 +202,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         core_cells['main.global_imports'] = self._create_code_cell(ex_name='main',
                                                                    tag='global_imports',
                                                                    source = self._render_template('global_imports.jinja',
-                                                                                            imports=imports,
-                                                                                            plugins=self.plugins))
+                                                                                            imports=imports))
         # update exercises
         for ex_num, (ex_name, ex) in enumerate(exercises_core_config.items()):
             # print(ex)
