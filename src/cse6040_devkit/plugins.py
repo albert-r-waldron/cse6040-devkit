@@ -1,13 +1,7 @@
-import dill
 ###
 ### Define plugins in this file
 ###
 
-def add_from_file(plugin_name, plugins_module):
-    plugin_path = f'resource/asnlib/publicdata/plugin.{plugin_name}.dill'
-    with open(plugin_path, 'rb') as f:
-        func = dill.load(f)
-    setattr(plugins_module, plugin_name, func)
 
 def postprocess_sort(func, key=None):
     """Plugin to sort list output types before comparing to the expected result. This has the effect of allowing students to return a list in any order and still pass the test cell.
@@ -60,7 +54,7 @@ def sql_executor(query_generator):
 
     Returns (function):
         - Takes an input `conn` which is a SQL connection as well as all other arguments to `query_generator`.
-        - Returns a Pandas DataFrame containing the result of running the query generated against the connection.
+        -  
     """
     import pandas as pd
     def _execute(conn, *args, **kwargs):
@@ -72,9 +66,7 @@ def sqlite_blocker(func):
     """Plugin to disable sqlite3.connect. This has the effect of preventing students
 
     Args:
-        func (function): A Python function
-
-    Returns (function): The input function with sqlite3.connect disabled at runtime and re-enabled after execution.
+        func ([type]): [description]
     """
     def replacement(*args, **kwargs):
         raise
