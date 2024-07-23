@@ -3,12 +3,6 @@ import dill
 ### Define plugins in this file
 ###
 
-def add_from_file(plugin_name, plugins_module):
-    plugin_path = f'resource/asnlib/publicdata/plugin.{plugin_name}.dill'
-    with open(plugin_path, 'rb') as f:
-        func = dill.load(f)
-    setattr(plugins_module, plugin_name, func)
-
 def postprocess_sort(func, key=None):
     """Plugin to sort list output types before comparing to the expected result. This has the effect of allowing students to return a list in any order and still pass the test cell.
 

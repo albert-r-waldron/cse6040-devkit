@@ -1,5 +1,5 @@
 ### Test Cell - Exercise {{ ex.num }}  
-
+ex{{ ex.num }}_start_time = time()
 {% if ex.config %}from cse6040_devkit.tester_fw.testers import Tester
 from yaml import safe_load
 
@@ -34,3 +34,7 @@ for _ in range({{ ex.n_hidden_trials }}):
 ### END HIDDEN TESTS
 {% endif %}
 print('Passed! Please submit.')
+ex{{ ex.num }}_end_time = time()
+ex{{ ex.num }}_duration = ex{{ ex.num }}_end_time - ex{{ ex.num }}_start_time
+total_duration = ex{{ ex.num }}_end_time - asn_start_time
+print(f'Exercise {{ ex.num }} ran for {round(ex{{ ex.num }}_duration, 2) } seconds') 
