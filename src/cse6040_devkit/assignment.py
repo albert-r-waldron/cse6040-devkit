@@ -6,16 +6,34 @@ from textwrap import dedent
 from cse6040_devkit.test_case.sample_gen import SampleGenerator
 from jinja2 import Environment, PackageLoader
 import cse6040_devkit.plugins 
+import cse6040_devkit.utils
 import dill
+from cryptography.fernet import Fernet
 
 class AssignmentBlueprint():
-    def __init__(self):
+    def __init__(self,
+                 keys_path='keys.dill'):
+        '''AssignmentBlueprints are containers to which assignment components can be registered under an exercise name.
+        
+        Args:
+        - keys_path (str) (optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'
+        '''
         self.core = {}
-        self.plugins = {}
-        if not os.path.exists('./resource/asnlib/publicdata'):
-            os.makedirs('./resource/asnlib/publicdata')
-        if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
-            os.makedirs('./resource/asnlib/publicdata/encrypted')
+        self.included = {}
+        # if not os.path.exists('./resource/asnlib/publicdata'):
+        #     os.makedirs('./resource/asnlib/publicdata')
+        # if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
+        #     os.makedirs('./resource/asnlib/publicdata/encrypted')
+        if os.path.exists(keys_path):
+            with open(keys_path, 'rb') as f:
+                self.keys = dill.load(f)
+        else:
+            self.keys = {
+                'visible_key': Fernet.generate_key(),
+                'hidden_key': Fernet.generate_key()
+            }
+            with open(keys_path, 'wb') as f:
+                dill.dump(self.keys, f)
 
     def register_notebook_function(self, ex_name, func_type):
         """Decorator that registers a notebook function to the blueprint.
@@ -48,34 +66,102 @@ class AssignmentBlueprint():
             return func
         return _register_function
     
-    def register_plugin(self):
-        def _register_plugin(func):
-            plugin_name = func.__name__
-            plugin_path = f'resource/asnlib/publicdata/plugin.{plugin_name}.dill'
-            self.plugins[plugin_name] = plugin_path
-            # set the attribute locally in case it's needed in the source files
-            setattr(cse6040_devkit.plugins, plugin_name, func)
-            # dump it to a file
-            with open(plugin_path, 'wb') as f:
-                dill.dump(func, f)
+    def _register_included_function(self, func_type):
+        def _registered_function(func):
+            func_name = func.__name__
+            self.included[func_type] = self.included.get(func_type, {})
+            self.included[func_type][func_name] = func
+            setattr(eval(f'cse6040_devkit.{func_type}'), func_name, func)
+            # cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
             return func
-        return _register_plugin
+        return _registered_function
+
+    def register_plugin(self):
+        '''Decorator factory which registers a function as a plugin. The function will be available as `plugins.<function name>` following registration as well as in the target notebook.
+
+        Plugins are decorators intended to wrap solution functions to facilitate testing. 
+
+        **Usage**
+        ```
+        @bp.register_plugin()
+        def foo(func):
+            def _func(*args, **kwargs):
+                return 'foo' + func(*args, **kwargs)
+            return _func
+        ```
+        This makes `plugins.foo` accessible in both the source files as well as the target notebook. For academia, the plugin prepends the string 'foo' onto whatever is returned by a function call to `func`.
+        '''
+        return self._register_included_function('plugins')
     
-    def register_solution(self, ex_name):
+    def register_util(self):
+        '''Decorator factory which registers a function as a util. The function will be available as `utils.<function name>` following registration as well as in the target notebook.
+
+        Utils are intended to be used for functions which are called in the notebook code when it is not desired to reveal the function's source code.
+        '''
+        return self._register_included_function('utils')
+    
+    def register_solution(self, ex_name: str):
+        '''Decorator factory which registers a function as a solution for the exercise identified by `ex_name`.
+
+        **Effects**:
+        - Function definition will be rendered in target notebook solution cell for `ex_name` on build.
+            - Use `### BEGIN SOLUTION` and `### END SOLUTION` to mark code which will be removed in the student version.
+        - Docstring and type hints will be used to render the prompt and default configuration for `ex_name` on build.
+            - Best practice is to use the docstring to provide a brief description of the solution function's inputs, outputs, and behavior
+        '''
         return self.register_notebook_function(ex_name, 'solution')
     
-    def register_demo(self, ex_name):
+    def register_demo(self, ex_name: str):
+        '''Decorator factory which registers a function as a demo for the exercise identified by `ex_name`.
+
+        **Effects**:
+        - Function body will be rendered in the target notebook at the top indentation level on build
+            - The decorated demo function should take no parameters and return no values.
+            - The decorated demo function should display the result of calling the solution function on one or more sets of demo inputs using `print`, `display`, etc. 
+        - Docstring will be rendered at the top of the "test cell boilerplate" cell for the exercise on build
+            - Best practice is to use the docstring to inform students of the expected demo output
+        '''
         return self.register_notebook_function(ex_name, 'demo')
     
     def register_helper(self, ex_name):
+        '''Decorator factory which registers a function as a helper for the exercise identified by `ex_name`.
+
+        Helper functions are functions provided for the students to use to solve an exercise. The code is rendered in the target notebook. If the code is particularly un-useful to students or they do not need to call the helper function then it may be a better choice to register the function as a util.
+
+        **Effects**:
+        - Function definition will be rendered in the target notebook solution cell identified by `ex_name` on build.
+        - Docstring will appear in the target notebook prompt cell identified by `ex_name` on build.
+            - Best practice is to provide a brief description of how to use the function
+            - If no docstring is provided then         
+        '''
         return self.register_notebook_function(ex_name, 'helper')
     
     def register_sampler(self, ex_name, sol_func, n_cases, output_names, plugin='', extra_param_names=None, **plugin_kwargs):
+        '''Decorator factory which registers a function as a sampler for the exercise identified by `ex_name`.
+        **Inputs**
+        - ex_name (str): identifies the exercise to which the sampler is being registered
+        - sol_func (function): the solution to the exercise
+        - n_cases (int): number of test cases to generate
+        - output_names (tuple|str): Name or names of the outputs of the sol_func
+        - plugin (str) (optional): Name of a built-in or registered plugin to use for the test cases
+        - extra_param_names (list[str]) (optional): List of parameters required by a plugin decorated but not the original solution function
+        - plugin_kwargs: Additional named arguments are passed as keyword args to the plugin decorator
+
+        **Effects on registration**:
+        - Test cases are written to `resource/asnlib/publicdata` and `resource/asnlib/publicdata/encrypted`
+
+        **Effects on build**:
+        - Test cells constructed based on registered sampler
+        
+        '''
+        if isinstance(output_names, str):
+            output_names = (output_names,)
         def _register_sampler(sampler_func):
             self.core[ex_name] = self.core.get(ex_name, {})
             self.core[ex_name]['test'] = {}
-            visible_path = f'resource/asnlib/publicdata/tc_{ex_name}'
-            hidden_path = f'resource/asnlib/publicdata/encrypted/tc_{ex_name}'
+            self.core[ex_name]['test']['visible_path'] = f'resource/asnlib/publicdata/tc_{ex_name}'
+            self.core[ex_name]['test']['hidden_path'] = f'resource/asnlib/publicdata/encrypted/tc_{ex_name}'
+            self.core[ex_name]['test']['n_cases'] = n_cases
             if plugin:
                 if plugin not in dir(cse6040_devkit.plugins):
                     raise ModuleNotFoundError(f'The plugin {plugin} is not defined in the plugins file.')
@@ -85,8 +171,9 @@ class AssignmentBlueprint():
             else:
                 self.core[ex_name]['test']['sol_func_name'] = sol_func.__name__
                 tc_gen = SampleGenerator(sol_func, sampler_func, output_names)
-            self.core[ex_name]['test']['visible_key'] = tc_gen.write_cases(visible_path, n_cases, key=None)
-            self.core[ex_name]['test']['hidden_key'] = tc_gen.write_cases(hidden_path, n_cases, key=None)
+            self.core[ex_name]['test']['tc_gen'] = tc_gen
+            self.core[ex_name]['test']['visible_key'] = self.keys['visible_key']
+            self.core[ex_name]['test']['hidden_key'] = self.keys['hidden_key']
             self.core[ex_name]['test']['output_names'] = output_names
             self.core[ex_name]['test']['sol_func_argspec'] = inspect.getfullargspec(sol_func)
             if extra_param_names:
@@ -96,16 +183,49 @@ class AssignmentBlueprint():
                 self.core[ex_name]['test']['plugin_kwargs'] = plugin_kwargs
             return sampler_func
         return _register_sampler
+    
+    def register_preload_object(self, ex_name: str, obj, obj_name:str):
+        """Registers an object to be preloaded before an exercise. Multiple objects _are_ allowed to be registered to the same exercise
+
+        Args:
+            ex_name (str): Name of the exercise to register the preload object to
+            obj (Any): Object which is serializable with dill
+        """
+        # cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
+        self.core[ex_name] = self.core.get(ex_name, {})
+        self.core[ex_name]['preload_objects'] = self.core[ex_name].get('preload_objects', {})
+        self.core[ex_name]['preload_objects'][obj_name] = obj
 
 class AssignmentBuilder(AssignmentBlueprint):
     def __init__(self, 
                  config_path='resource/asnlib/publicdata/assignment_config.yaml', 
                  notebook_path='main.ipynb',
-                 template_dir='templates'):
+                 keys_path='keys.dill'):
+        """Assignment Builders are an extension of blueprints. In addition to being able to register components, AssignmentBuilders can register other blueprints and build all of the components into a Jupyter notebook.
+
+        Args:
+            config_path (str, optional): Path to the configuration file. Defaults to 'resource/asnlib/publicdata/assignment_config.yaml'.
+            notebook_path (str, optional): Path to the target notebook. Defaults to 'main.ipynb'.
+            keys_path (str, optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'.
+        """
         self.config_path = config_path
         self.notebook_path = notebook_path
         self.core = {}
-        self.plugins = {}
+        self.included = {}
+        # if not os.path.exists('./resource/asnlib/publicdata'):
+        #     os.makedirs('./resource/asnlib/publicdata')
+        # if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
+        #     os.makedirs('./resource/asnlib/publicdata/encrypted')
+        if os.path.exists(keys_path):
+            with open(keys_path, 'rb') as f:
+                self.keys = dill.load(f)
+        else:
+            self.keys = {
+                'visible_key': Fernet.generate_key(),
+                'hidden_key': Fernet.generate_key()
+            }
+            with open(keys_path, 'wb') as f:
+                dill.dump(self.keys, f)
         if os.path.exists(config_path):
             with open(config_path) as f:
                 self.config = yaml.safe_load(f)
@@ -119,6 +239,16 @@ class AssignmentBuilder(AssignmentBlueprint):
         self.env = Environment(loader=PackageLoader('cse6040_devkit'))
 
     def register_blueprint(self, other):
+        """Registers a blueprint to the AssignmentBuilder
+
+        Registering a blueprint adds all attributes for each function type (solution, helper, demo, sampler) and exercise name from the blueprint to the builder. 
+
+        Args:
+            other (AssignmentBlueprint): The AssignmentBlueprint being registered
+
+        Raises:
+            ValueError: When attempting to register an exercise name/function type which already exists.
+        """
         for ex_name in other.core:
             if ex_name in self.core:
                 # exercise exists in core
@@ -132,13 +262,26 @@ class AssignmentBuilder(AssignmentBlueprint):
             else:
                 # new exercise in the other core
                 self.core[ex_name] = other.core[ex_name]
-        self.plugins.update(other.plugins)
+        self.included.update(other.included)
 
     def register_blueprints(self, others):
+        """Registers a collection of blueprints to the builder
+
+        Performs a series of calls to `register_blueprint`
+
+        Args:
+            others (list[AssignmentBlueprint]): _description_
+        """
         for other in others:
             self.register_blueprint(other)
 
     def _write_nb(self):
+        self.nb.metadata = {}
+        for idx, cell in enumerate(self.nb.cells):
+            cell.id = f'{idx}'
+            if cell.cell_type == 'code':
+                cell.outputs = []
+                cell.execution_count = None
         with open(self.notebook_path, 'w') as f:
             nbf.write(self.nb, f)
 
@@ -160,7 +303,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         temp_config = {'assignment_name': 'assignment name',
                        'subtitle': 'assignment subtitle',
                        'version': '0.0.1',
-                       'topics': ['topic', '...'],
+                       'topics': 'this, that, and the other',
                        'points_cap': 'points cap',
                        'total_points': 'total points',
                        'global_imports': None,
@@ -205,7 +348,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         with open(self.config_path, 'w') as f:
             yaml.safe_dump(self.config, f, sort_keys=False)
 
-    def build_core_cells(self):
+    def _build_core_cells(self):
         from copy import deepcopy
         exercises_core_config = {k:{**self.config['exercises'][k], **self.core.get(k, {})} for k in self.config['exercises']}
         core_cells = {}
@@ -219,10 +362,17 @@ class AssignmentBuilder(AssignmentBlueprint):
                                                                    tag='global_imports',
                                                                    source = self._render_template('global_imports.jinja',
                                                                                             imports=imports,
-                                                                                            plugins=self.plugins))
+                                                                                            plugins=self.included.get('plugins'),
+                                                                                            utils=self.included.get('utils')))
         # update exercises
         for ex_num, (ex_name, ex) in enumerate(exercises_core_config.items()):
-            # print(ex)
+            preload_objects = ex.get('preload_objects')
+            if preload_objects:
+                core_cells[f'{ex_name}.preload_objects'] = \
+                    self._create_code_cell(ex_name=ex_name,
+                                        tag='preload_objects',
+                                        source=self._render_template('preload_from_file.jinja',
+                                                                        preload_objects=preload_objects))
             core_cells[f'{ex_name}.prompt'] = \
                 self._create_markdown_cell(ex_name=ex_name,
                                            tag='prompt',
@@ -278,8 +428,36 @@ class AssignmentBuilder(AssignmentBlueprint):
         return deepcopy(core_cells)
     
     def build(self):
+        """Builds an assignment based on the components registered to the builder. The target notebook will be cleared of output, execution count, and environment metadata.
+
+        These steps are executed upon build
+        - Any configuration details not present in the config file are populated with default values
+        - The config file is updated
+        - The target notebook is updated
+            - Any core cells are updated in place
+            - Any non-core cells are maintained as-is
+            - The current sequence of cells is maintained as-is
+            - Any new non-core cells are appended to the end of the target notebook
+        """
+        if not os.path.exists('./resource/asnlib/publicdata'):
+            os.makedirs('./resource/asnlib/publicdata')
+        if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
+            os.makedirs('./resource/asnlib/publicdata/encrypted')
         self._update_config_from_core()
-        core_cells = self.build_core_cells()
+        for ex in self.core.values():
+            test = ex.get('test')
+            if test:
+                tc_gen = test['tc_gen']
+                tc_gen.write_cases(test['visible_path'], test['n_cases'], key=self.keys['visible_key'])
+                tc_gen.write_cases(test['hidden_path'], test['n_cases'], key=self.keys['hidden_key'])
+            preload_objects = ex.get('preload_objects')
+            if preload_objects:
+                for obj_name, obj in preload_objects.items():
+                    cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
+        for func_type, funcs in self.included.items():
+            for func_name, func in funcs.items():
+                cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
+        core_cells = self._build_core_cells()
         final_nb = nbf.v4.new_notebook()
         for cell in self.nb.cells:
             tags = cell.metadata.get('tags')
