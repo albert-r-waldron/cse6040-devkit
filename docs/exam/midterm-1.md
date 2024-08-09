@@ -4,6 +4,8 @@ Midterm 1 covers the course material from modules 0-5. It is expected that stude
 
 ## Rubric
 
+For each high-level concept below include one moderate complexity (2-pt) exercise featuring that concept as the focus of the solution. 
+
 ### Python Data Structures
 
 - Create and perform basic programming tasks with these data types: **str, int, bool, float**
