@@ -1,8 +1,8 @@
-# Midterm 1 Rubric
+# Midterm 1
 
-## Balancing
+Midterm 1 covers the course material from modules 0-5. It is expected that students are familiar with the basics of Python at this point in the course. 
 
-Midterm 1 should include at least one exercise requiring each of the following
+## Rubric
 
 ### Python Data Structures
 
@@ -17,7 +17,7 @@ Midterm 1 should include at least one exercise requiring each of the following
 - raising/handling errors
 - functions
   - functions passed as arguments, defined in the startercode, or explained in the prompt
-  - defining functions reduce repetitive code
+  - defining functions to reduce repetitive code
   - lambda functions to pass as arguments
 
 ### String Parsing and Manipulation
@@ -25,6 +25,7 @@ Midterm 1 should include at least one exercise requiring each of the following
 - Manipulation with string methods such as **join, upper/lower, replace**, etc
 - Simple pattern matching with string methods
 - Complex pattern matching with regular expressions
+- Construct formatted strings
 
 ### Numeric operations
 
