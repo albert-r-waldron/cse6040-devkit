@@ -1,8 +1,11 @@
  {% if ex.demo and ex.demo.docstring %}{{ ex.demo.docstring }}
  ---{% endif %}
- <!-- Test Cell Boilerplate -->  
+ <!-- Test Cell Boilerplate -->  {% if ex.free %}
+ The test cell below will always pass. Please submit to collect your free points for {{ex_name}} (exercise {{ ex_num }}).
+ {% else %}
 The cell below will test your solution for {{ex_name}} (exercise {{ ex_num }}). The testing variables will be available for debugging under the following names in a dictionary format.  
 - `input_vars` - Input variables for your solution.   
 - `original_input_vars` - Copy of input variables from prior to running your solution. Any `key:value` pair in `original_input_vars` should also exist in `input_vars` - otherwise the inputs were modified by your solution.  
 - `returned_output_vars` - Outputs returned by your solution.  
 - `true_output_vars` - The expected output. This _should_ "match" `returned_output_vars` based on the question requirements - otherwise, your solution is not returning the correct output. 
+{% endif %}

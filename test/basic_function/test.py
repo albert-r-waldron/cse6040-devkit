@@ -103,7 +103,7 @@ free_data = [1,2,3,4]
 bp.register_preload_object('freebie', free_data, 'free_data')
 
 # Create an instance of AssignmentBuilder
-builder = assignment.AssignmentBuilder()
+builder = assignment.AssignmentBuilder(header=False)
 
 # Register blueprint
 builder.register_blueprint(bp)

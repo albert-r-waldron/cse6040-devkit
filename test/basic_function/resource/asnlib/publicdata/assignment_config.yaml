@@ -8,7 +8,7 @@ global_imports: null
 exercises:
   fizzbuzz:
     num: 0
-    points: 1
+    points: 0
     n_visible_trials: 100
     n_hidden_trials: 1
     config:

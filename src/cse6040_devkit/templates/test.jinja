@@ -21,7 +21,7 @@ for _ in range({{ ex.n_visible_trials }}):
     except:
         (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
         raise
-
+{% if ex.test.include_hidden %}
 ### BEGIN HIDDEN TESTS
 tester = Tester(ex_conf, key={{ ex.test.hidden_key }}, path='resource/asnlib/publicdata/encrypted/')
 for _ in range({{ ex.n_hidden_trials }}):
@@ -32,7 +32,7 @@ for _ in range({{ ex.n_hidden_trials }}):
         (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
         raise
 ### END HIDDEN TESTS
-{% endif %}
+{% endif %}{% endif %}
 print('Passed! Please submit.')
 ex{{ ex.num }}_end_time = time()
 ex{{ ex.num }}_duration = ex{{ ex.num }}_end_time - ex{{ ex.num }}_start_time
