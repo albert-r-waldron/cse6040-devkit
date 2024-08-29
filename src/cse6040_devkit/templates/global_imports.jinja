@@ -1,9 +1,8 @@
 ### Global imports
-from time import time
+import dill
 from cse6040_devkit import plugins, utils
 {% if imports %}{% for import in imports%}{%if import.submodule%}from {{import.module}} import {{import.submodule}}{%else%}import {{import.module}} {%endif%}{%if import.alias %}as {{import.alias}}{%endif%}
 {% endfor %}{% endif %}{% if plugins %}{%for name in plugins %}
 utils.add_from_file('{{ name }}', plugins){% endfor %}{% endif %}
 {% if utils %}{% for name in utils %}utils.add_from_file('{{ name }}', utils)
 {% endfor %}{% endif %}
-asn_start_time = time()
