@@ -8,7 +8,7 @@ second_builder = AssignmentBuilder(config_path='resource/asnlib/publicdata/asn_c
 # %%
 # Create a solution and sampler for the first builder
 def create_x():
-    return {'x': rng.choice(10_000, (1500,))}
+    return {'x': rng.choice(10_000, (1,))}
 
 @builder.register_solution('ex_0')
 def two_x_plus_three(x):
@@ -16,8 +16,9 @@ def two_x_plus_three(x):
 
 @builder.register_sampler('ex_0',
                           two_x_plus_three,
-                          500,
-                          'out')
+                          100,
+                          'out',
+                          plugin='postprocess_sort')
 def sam1():
     return create_x()
 
@@ -29,7 +30,7 @@ builder.build()
 # Register the "same" sampler to the second builder
 @second_builder.register_sampler('ex_0_',
                           two_x_plus_three,
-                          500,
+                          100,
                           'out')
 def sam2():
     return create_x()

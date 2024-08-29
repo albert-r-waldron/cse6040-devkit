@@ -10,6 +10,34 @@ import cse6040_devkit.utils
 import dill
 from cryptography.fernet import Fernet
 
+def execute_tests(func,
+                  ex_name,
+                  key,
+                  n_iter,
+                  hidden=False):
+    from time import time
+    ex_start = time()
+    from cse6040_devkit.tester_fw.testers import Tester
+    from yaml import safe_load
+    conf_path ='resource/asnlib/publicdata/assignment_config.yaml'
+    path = 'resource/asnlib/publicdata/'
+    if hidden: path += 'encrypted/'
+    with open(conf_path) as f:
+        ex_conf = safe_load(f)['exercises'][ex_name]['config']
+    ex_conf['func'] = func
+    tester = Tester(ex_conf, key, path)
+    for _ in range(n_iter):
+        try:
+            tester.run_test()
+            test_case_vars = tester.get_test_vars()
+        except Exception as e:
+            test_case_vars = tester.get_test_vars()
+            print(f'{ex_name} test ran {n_iter} iterations in {time() - ex_start:.2f} seconds')
+            print(str(e))
+            return False, test_case_vars
+    print(f'{ex_name} test ran {n_iter} iterations in {time() - ex_start:.2f} seconds')
+    return True, test_case_vars
+
 class AssignmentBlueprint():
     def __init__(self,
                  keys_path='keys.dill'):
@@ -454,6 +482,7 @@ class AssignmentBuilder(AssignmentBlueprint):
             if preload_objects:
                 for obj_name, obj in preload_objects.items():
                     cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
+        cse6040_devkit.utils.dump_object_to_publicdata(execute_tests, 'execute_tests')
         for func_type, funcs in self.included.items():
             for func_name, func in funcs.items():
                 cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)

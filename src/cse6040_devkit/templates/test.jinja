@@ -1,40 +1,22 @@
 ### Test Cell - Exercise {{ ex.num }}  
-ex{{ ex.num }}_start_time = time()
-{% if ex.config %}from cse6040_devkit.tester_fw.testers import Tester
-from yaml import safe_load
 
-with open('{{ conf_path }}') as f:
-    ex_conf = safe_load(f)['exercises']['{{ ex_name }}']['config']
-{% if ex.test.plugin_kwargs %}
-import dill
-with open(f'resource/asnlib/publicdata/{{ ex_name }}_plugin_kwargs', 'rb') as f:
-    plugin_kwargs = dill.load(f)
-{% endif %}
-
-ex_conf['func'] = {{ ex.test.sol_func_name }}
-
-tester = Tester(ex_conf, key={{ ex.test.visible_key }}, path='resource/asnlib/publicdata/')
-for _ in range({{ ex.n_visible_trials }}):
-    try:
-        tester.run_test()
-        (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
-    except:
-        (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
-        raise
+{% if ex.config %}with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
+    execute_tests = dill.load(f)
+passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
+              ex_name='{{ ex_name }}',
+              key={{ ex.test.visible_key }}, 
+              n_iter={{ ex.n_visible_trials }})
+input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
+assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 
 ### BEGIN HIDDEN TESTS
-tester = Tester(ex_conf, key={{ ex.test.hidden_key }}, path='resource/asnlib/publicdata/encrypted/')
-for _ in range({{ ex.n_hidden_trials }}):
-    try:
-        tester.run_test()
-        (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
-    except:
-        (input_vars, original_input_vars, returned_output_vars, true_output_vars) = tester.get_test_vars()
-        raise
+passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
+              ex_name='{{ ex_name }}',
+              key={{ ex.test.hidden_key }}, 
+              n_iter={{ ex.n_hidden_trials }},
+              hidden=True)
+input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
+assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 ### END HIDDEN TESTS
 {% endif %}
-print('Passed! Please submit.')
-ex{{ ex.num }}_end_time = time()
-ex{{ ex.num }}_duration = ex{{ ex.num }}_end_time - ex{{ ex.num }}_start_time
-total_duration = ex{{ ex.num }}_end_time - asn_start_time
-print(f'Exercise {{ ex.num }} ran for {round(ex{{ ex.num }}_duration, 2) } seconds') 
+print('Passed {{ ex_name }}. Please submit!')
