@@ -1,12 +1,17 @@
 ### Test Cell - Exercise {{ ex.num }}  
 
-{% if ex.config %}with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
+{% if ex.config %}# Load testing utility
+with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
     execute_tests = dill.load(f)
+
+# Execute test
 passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
               ex_name='{{ ex_name }}',
               key={{ ex.test.visible_key }}, 
               n_iter={{ ex.n_visible_trials }})
+# Assign test case vars for debugging
 input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
+
 assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 
 ### BEGIN HIDDEN TESTS
