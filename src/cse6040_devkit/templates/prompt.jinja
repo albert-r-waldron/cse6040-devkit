@@ -1,7 +1,7 @@
 ### Exercise {{ ex_num }}: ({{ ex.points }} points)
 **{{ ex_name }}**  
 
-{% if ex.solution %}**Your task:** define `{{ ex.solution.name }}` as follows:
+{% if ex.solution %}{% if ex.free %}**Example:** we have defined {% else %}**Your task:** define {% endif %}`{{ ex.solution.name }}` as follows:
 
 {{ ex.solution.docstring }}{% else %}**This is a free exercise!**  
 

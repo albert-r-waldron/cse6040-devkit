@@ -128,7 +128,7 @@ class AssignmentBlueprint():
         '''
         return self._register_included_function('utils')
     
-    def register_solution(self, ex_name: str):
+    def register_solution(self, ex_name: str, free: bool=False):
         '''Decorator factory which registers a function as a solution for the exercise identified by `ex_name`.
 
         **Effects**:
@@ -137,6 +137,9 @@ class AssignmentBlueprint():
         - Docstring and type hints will be used to render the prompt and default configuration for `ex_name` on build.
             - Best practice is to use the docstring to provide a brief description of the solution function's inputs, outputs, and behavior
         '''
+        self.core[ex_name] = self.core.get(ex_name, {})
+        self.core[ex_name]['free'] = free
+
         return self.register_notebook_function(ex_name, 'solution')
     
     def register_demo(self, ex_name: str):
@@ -164,15 +167,16 @@ class AssignmentBlueprint():
         '''
         return self.register_notebook_function(ex_name, 'helper')
     
-    def register_sampler(self, ex_name, sol_func, n_cases, output_names, plugin='', extra_param_names=None, **plugin_kwargs):
+    def register_sampler(self, ex_name, sol_func, n_cases, output_names, plugin='', extra_param_names=None, include_hidden=True, **plugin_kwargs):
         '''Decorator factory which registers a function as a sampler for the exercise identified by `ex_name`.
         **Inputs**
         - ex_name (str): identifies the exercise to which the sampler is being registered
         - sol_func (function): the solution to the exercise
         - n_cases (int): number of test cases to generate
         - output_names (tuple|str): Name or names of the outputs of the sol_func
-        - plugin (str) (optional): Name of a built-in or registered plugin to use for the test cases
-        - extra_param_names (list[str]) (optional): List of parameters required by a plugin decorated but not the original solution function
+        - plugin (str) (optional): Name of a built-in or registered plugin to use for the test cases. Defaults to an empty string.
+        - extra_param_names (list[str]) (optional): List of parameters required by a plugin decorated but not the original solution function. Defaults to None.
+        - include_hidden (bool) (optional): Whether to include the hidden test in the notebook. Defaults to True.
         - plugin_kwargs: Additional named arguments are passed as keyword args to the plugin decorator
 
         **Effects on registration**:
@@ -228,7 +232,8 @@ class AssignmentBuilder(AssignmentBlueprint):
     def __init__(self, 
                  config_path='resource/asnlib/publicdata/assignment_config.yaml', 
                  notebook_path='main.ipynb',
-                 keys_path='keys.dill'):
+                 keys_path='keys.dill',
+                 header=True):
         """Assignment Builders are an extension of blueprints. In addition to being able to register components, AssignmentBuilders can register other blueprints and build all of the components into a Jupyter notebook.
 
         Args:
@@ -240,6 +245,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         self.notebook_path = notebook_path
         self.core = {}
         self.included = {}
+        self.header = header
         # if not os.path.exists('./resource/asnlib/publicdata'):
         #     os.makedirs('./resource/asnlib/publicdata')
         # if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
@@ -381,9 +387,10 @@ class AssignmentBuilder(AssignmentBlueprint):
         exercises_core_config = {k:{**self.config['exercises'][k], **self.core.get(k, {})} for k in self.config['exercises']}
         core_cells = {}
         # update header
-        core_cells['main.header'] = self._create_markdown_cell(ex_name='main',
-                                                          tag='header',
-                                                          source=self._render_template('header.jinja', **self.config))
+        if self.header:
+            core_cells['main.header'] = self._create_markdown_cell(ex_name='main',
+                                                            tag='header',
+                                                            source=self._render_template('header.jinja', **self.config))
         # update global imports
         imports = self.config.get('global_imports')
         core_cells['main.global_imports'] = self._create_code_cell(ex_name='main',
@@ -437,11 +444,14 @@ class AssignmentBuilder(AssignmentBlueprint):
                                                                             ex_num=ex_num,
                                                                             ex=ex))
             # update test
+            _ex = deepcopy(ex)
+            if ex.get('free'):
+                _ex['config'] = {}
             test_cell =  \
                 self._create_code_cell(ex_name=ex_name,
                                        tag='test',
                                        source=self._render_template('test.jinja',
-                                                                    ex=ex,
+                                                                    ex=_ex,
                                                                     ex_name=ex_name,
                                                                     conf_path=self.config_path))
             test_cell.metadata.update( {
@@ -474,7 +484,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         self._update_config_from_core()
         for ex in self.core.values():
             test = ex.get('test')
-            if test:
+            if test and (not ex.get('free', False)):
                 tc_gen = test['tc_gen']
                 tc_gen.write_cases(test['visible_path'], test['n_cases'], key=self.keys['visible_key'])
                 tc_gen.write_cases(test['hidden_path'], test['n_cases'], key=self.keys['hidden_key'])

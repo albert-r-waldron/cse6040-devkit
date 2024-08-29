@@ -14,7 +14,7 @@ input_vars, original_input_vars, returned_output_vars, true_output_vars = test_c
 
 assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 
-### BEGIN HIDDEN TESTS
+{% if ex.test.include_hidden %}### BEGIN HIDDEN TESTS
 passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
               ex_name='{{ ex_name }}',
               key={{ ex.test.hidden_key }}, 
@@ -22,6 +22,5 @@ passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
               hidden=True)
 input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
 assert passed, 'The solution to {{ ex_name }} did not pass the test.'
-### END HIDDEN TESTS
-{% endif %}
-print('Passed {{ ex_name }}. Please submit!')
+### END HIDDEN TESTS{% endif %}{% endif %}
+print('Passed! Please submit.')
