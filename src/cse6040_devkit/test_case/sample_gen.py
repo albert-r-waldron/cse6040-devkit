@@ -7,11 +7,14 @@ from inspect import signature
 class SampleGenerator(TestCaseGenerator):
     def __init__(self, test_func, sampler_func, output_names=None, seed=None):
         self.test_func = test_func
-        if len(signature(sampler_func).parameters) == 1:
+        n_params = len(signature(sampler_func).parameters)
+        if n_params == 1:
             rng = default_rng(seed=seed)
             self.sampler_func = lambda: sampler_func(rng)
-        else:
+        elif n_params == 0:
             self.sampler_func = sampler_func
+        else:
+            raise ValueError(f'A sampler function must take 0 arguments or take one rng argument. The sampler passed takes {n_params} arguments.')
         self.output_names = output_names
     
     def make_inputs(self):
