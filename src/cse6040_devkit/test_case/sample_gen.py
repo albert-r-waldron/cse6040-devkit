@@ -49,11 +49,3 @@ class SampleGenerator(TestCaseGenerator):
         self.output_data = dict(zip(self.output_names, unnamed_outputs))
         return self.output_data
         
-
-class RandomSampleGenerator(SampleGenerator):
-    def __init__(self, test_func, sampler_func, output_names=None):
-        super().__init__(test_func, sampler_func, output_names)
-        
-
-
-        
