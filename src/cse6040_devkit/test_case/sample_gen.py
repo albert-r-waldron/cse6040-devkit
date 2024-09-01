@@ -1,11 +1,17 @@
 from .test_case_gen import TestCaseGenerator
 from .input_gen_utils import dfs_to_conn
 from warnings import warn
+from numpy.random import default_rng
+from inspect import signature
 
 class SampleGenerator(TestCaseGenerator):
-    def __init__(self, test_func, sampler_func, output_names=None):
+    def __init__(self, test_func, sampler_func, output_names=None, seed=None):
         self.test_func = test_func
-        self.sampler_func = sampler_func
+        if len(signature(sampler_func).parameters) == 1:
+            rng = default_rng(seed=seed)
+            self.sampler_func = lambda: sampler_func(rng)
+        else:
+            self.sampler_func = sampler_func
         self.output_names = output_names
     
     def make_inputs(self):
@@ -41,6 +47,10 @@ class SampleGenerator(TestCaseGenerator):
         return self.output_data
         
 
+class RandomSampleGenerator(SampleGenerator):
+    def __init__(self, test_func, sampler_func, output_names=None):
+        super().__init__(test_func, sampler_func, output_names)
         
+
 
         
