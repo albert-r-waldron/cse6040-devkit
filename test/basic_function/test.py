@@ -8,10 +8,10 @@ seed(6040)
 
 
 # Create an instance of AssignmentBlueprint
-bp = assignment.AssignmentBlueprint()
+bp = assignment.AssignmentBlueprint(include_hidden=False)
 
 # Register an exercise solution
-@bp.register_solution(ex_name='fizzbuzz', free=True)
+@bp.register_solution(ex_name='fizzbuzz')
 def fizzbuzz_soln(i: int):
     """`fizzbuzz_soln` solves the classic "fizzbuzz" problem for a single integer. 
 
@@ -69,7 +69,8 @@ def convert_to_str(func):
                      sol_func=fizzbuzz_soln, 
                      n_cases=30,             
                      output_names=('fizzbuzz_output',), 
-                     plugin='convert_to_str')
+                     plugin='convert_to_str',
+                     include_hidden=True)
 def fizzbuzz_sampler():
     from random import randint, seed
     if randint(1,6) < 2:

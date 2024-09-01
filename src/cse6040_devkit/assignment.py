@@ -41,7 +41,8 @@ def execute_tests(func,
 
 class AssignmentBlueprint():
     def __init__(self,
-                 keys_path='keys.dill'):
+                 keys_path='keys.dill',
+                 include_hidden=True):
         '''AssignmentBlueprints are containers to which assignment components can be registered under an exercise name.
         
         Args:
@@ -50,6 +51,7 @@ class AssignmentBlueprint():
         self.core = {}
         self.included = {}
         self.keys_path = keys_path
+        self.include_hidden = include_hidden
         if os.path.exists(keys_path):
             with open(keys_path, 'rb') as f:
                 self.keys = dill.load(f)
@@ -166,7 +168,7 @@ class AssignmentBlueprint():
         '''
         return self.register_notebook_function(ex_name, 'helper')
     
-    def register_sampler(self, ex_name, sol_func, n_cases, output_names, plugin='', extra_param_names=None, include_hidden=True, **plugin_kwargs):
+    def register_sampler(self, ex_name, sol_func, n_cases, output_names, plugin='', extra_param_names=None, include_hidden=None, **plugin_kwargs):
         '''Decorator factory which registers a function as a sampler for the exercise identified by `ex_name`.
         **Inputs**
         - ex_name (str): identifies the exercise to which the sampler is being registered
@@ -193,6 +195,10 @@ class AssignmentBlueprint():
             self.core[ex_name]['test']['visible_path'] = f'resource/asnlib/publicdata/tc_{ex_name}'
             self.core[ex_name]['test']['hidden_path'] = f'resource/asnlib/publicdata/encrypted/tc_{ex_name}'
             self.core[ex_name]['test']['n_cases'] = n_cases
+            if include_hidden is not None:
+                self.core[ex_name]['test']['include_hidden'] = include_hidden
+            else:
+                self.core[ex_name]['test']['include_hidden'] = self.include_hidden
             seed = self.keys['rng_seed']
             if plugin:
                 if plugin not in dir(cse6040_devkit.plugins):
@@ -233,7 +239,8 @@ class AssignmentBuilder(AssignmentBlueprint):
                  config_path='resource/asnlib/publicdata/assignment_config.yaml', 
                  notebook_path='main.ipynb',
                  keys_path='keys.dill',
-                 header=True):
+                 header=True,
+                 include_hidden=True):
         """Assignment Builders are an extension of blueprints. In addition to being able to register components, AssignmentBuilders can register other blueprints and build all of the components into a Jupyter notebook.
 
         Args:
@@ -241,7 +248,7 @@ class AssignmentBuilder(AssignmentBlueprint):
             notebook_path (str, optional): Path to the target notebook. Defaults to 'main.ipynb'.
             keys_path (str, optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'.
         """
-        super().__init__(keys_path)
+        super().__init__(keys_path=keys_path, include_hidden=include_hidden)
         self.config_path = config_path
         self.notebook_path = notebook_path
         self.header = header
