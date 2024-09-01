@@ -1,6 +1,6 @@
 ### Test Cell - Exercise {{ ex.num }}  
 
-{% if ex.config %}# Load testing utility
+{% if ex.config and ex.test %}# Load testing utility
 with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
     execute_tests = dill.load(f)
 

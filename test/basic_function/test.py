@@ -11,7 +11,7 @@ seed(6040)
 bp = assignment.AssignmentBlueprint()
 
 # Register an exercise solution
-@bp.register_solution(ex_name='fizzbuzz')
+@bp.register_solution(ex_name='fizzbuzz', free=True)
 def fizzbuzz_soln(i: int):
     """`fizzbuzz_soln` solves the classic "fizzbuzz" problem for a single integer. 
 

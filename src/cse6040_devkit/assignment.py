@@ -59,6 +59,8 @@ class AssignmentBlueprint():
                 'hidden_key': Fernet.generate_key(),
                 'rng_seed': randint(1000, 9999)
             }
+            with open(self.keys_path, 'wb') as f:
+                dill.dump(self.keys, f)
 
     def register_notebook_function(self, ex_name, func_type):
         """Decorator that registers a notebook function to the blueprint.
@@ -464,8 +466,6 @@ class AssignmentBuilder(AssignmentBlueprint):
             os.makedirs('./resource/asnlib/publicdata')
         if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
             os.makedirs('./resource/asnlib/publicdata/encrypted')
-        with open(self.keys_path, 'wb') as f:
-            dill.dump(self.keys, f)
         self._update_config_from_core()
         for ex in self.core.values():
             test = ex.get('test')
