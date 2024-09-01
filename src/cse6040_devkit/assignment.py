@@ -9,6 +9,7 @@ import cse6040_devkit.plugins
 import cse6040_devkit.utils
 import dill
 from cryptography.fernet import Fernet
+from random import randint
 
 def execute_tests(func,
                   ex_name,
@@ -55,7 +56,8 @@ class AssignmentBlueprint():
         else:
             self.keys = {
                 'visible_key': Fernet.generate_key(),
-                'hidden_key': Fernet.generate_key()
+                'hidden_key': Fernet.generate_key(),
+                'rng_seed': randint(1000, 9999)
             }
 
     def register_notebook_function(self, ex_name, func_type):
@@ -189,15 +191,16 @@ class AssignmentBlueprint():
             self.core[ex_name]['test']['visible_path'] = f'resource/asnlib/publicdata/tc_{ex_name}'
             self.core[ex_name]['test']['hidden_path'] = f'resource/asnlib/publicdata/encrypted/tc_{ex_name}'
             self.core[ex_name]['test']['n_cases'] = n_cases
+            seed = self.keys['rng_seed']
             if plugin:
                 if plugin not in dir(cse6040_devkit.plugins):
                     raise ModuleNotFoundError(f'The plugin {plugin} is not defined in the plugins file.')
                 plugged_in_name = f'plugins.{plugin}({sol_func.__name__}{", **plugin_kwargs" if plugin_kwargs else ""})'
                 self.core[ex_name]['test']['sol_func_name'] = plugged_in_name
-                tc_gen = SampleGenerator(getattr(cse6040_devkit.plugins, plugin)(sol_func, **plugin_kwargs), sampler_func, output_names)
+                tc_gen = SampleGenerator(getattr(cse6040_devkit.plugins, plugin)(sol_func, **plugin_kwargs), sampler_func, output_names, seed=seed)
             else:
                 self.core[ex_name]['test']['sol_func_name'] = sol_func.__name__
-                tc_gen = SampleGenerator(sol_func, sampler_func, output_names)
+                tc_gen = SampleGenerator(sol_func, sampler_func, output_names, seed=seed)
             self.core[ex_name]['test']['tc_gen'] = tc_gen
             self.core[ex_name]['test']['visible_key'] = self.keys['visible_key']
             self.core[ex_name]['test']['hidden_key'] = self.keys['hidden_key']
