@@ -48,10 +48,7 @@ class AssignmentBlueprint():
         '''
         self.core = {}
         self.included = {}
-        # if not os.path.exists('./resource/asnlib/publicdata'):
-        #     os.makedirs('./resource/asnlib/publicdata')
-        # if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
-        #     os.makedirs('./resource/asnlib/publicdata/encrypted')
+        self.keys_path = keys_path
         if os.path.exists(keys_path):
             with open(keys_path, 'rb') as f:
                 self.keys = dill.load(f)
@@ -60,8 +57,6 @@ class AssignmentBlueprint():
                 'visible_key': Fernet.generate_key(),
                 'hidden_key': Fernet.generate_key()
             }
-            with open(keys_path, 'wb') as f:
-                dill.dump(self.keys, f)
 
     def register_notebook_function(self, ex_name, func_type):
         """Decorator that registers a notebook function to the blueprint.
@@ -241,25 +236,10 @@ class AssignmentBuilder(AssignmentBlueprint):
             notebook_path (str, optional): Path to the target notebook. Defaults to 'main.ipynb'.
             keys_path (str, optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'.
         """
+        super().__init__(keys_path)
         self.config_path = config_path
         self.notebook_path = notebook_path
-        self.core = {}
-        self.included = {}
         self.header = header
-        # if not os.path.exists('./resource/asnlib/publicdata'):
-        #     os.makedirs('./resource/asnlib/publicdata')
-        # if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
-        #     os.makedirs('./resource/asnlib/publicdata/encrypted')
-        if os.path.exists(keys_path):
-            with open(keys_path, 'rb') as f:
-                self.keys = dill.load(f)
-        else:
-            self.keys = {
-                'visible_key': Fernet.generate_key(),
-                'hidden_key': Fernet.generate_key()
-            }
-            with open(keys_path, 'wb') as f:
-                dill.dump(self.keys, f)
         if os.path.exists(config_path):
             with open(config_path) as f:
                 self.config = yaml.safe_load(f)
@@ -481,6 +461,8 @@ class AssignmentBuilder(AssignmentBlueprint):
             os.makedirs('./resource/asnlib/publicdata')
         if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
             os.makedirs('./resource/asnlib/publicdata/encrypted')
+        with open(self.keys_path, 'wb') as f:
+            dill.dump(self.keys, f)
         self._update_config_from_core()
         for ex in self.core.values():
             test = ex.get('test')
