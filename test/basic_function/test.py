@@ -2,11 +2,6 @@
 # Import whatever is needed as well as these modules from the devkit.
 from cse6040_devkit import assignment, utils, plugins
 
-# Set a seed for usage of RNG in generating test cases
-from random import seed
-seed(6040)
-
-
 # Create an instance of AssignmentBlueprint
 bp = assignment.AssignmentBlueprint(include_hidden=False)
 
@@ -71,11 +66,8 @@ def convert_to_str(func):
                      output_names=('fizzbuzz_output',), 
                      plugin='convert_to_str',
                      include_hidden=True)
-def fizzbuzz_sampler():
-    from random import randint, seed
-    if randint(1,6) < 2:
-        return {'i': 15*randint(1, 13)}
-    return {'i': randint(1,200)}
+def fizzbuzz_sampler(rng):
+    return {'i': int(rng.integers(1,200))}
 
 # Register a utility function to be made available in the notebook
 # Utils source code is not included in the notebook
@@ -93,9 +85,8 @@ def foo(arg: str) -> str:
 
 # Registering a demo for an exercise that does not have a solution
 # creates a free exercise. 
-@bp.register_demo('freebie')
+@bp.register_solution('freebie', free=True)
 def freebie():
-    ### It doesn't matter what you put here the prompt won't generate unless a solution is registered
     print('Hurray! Free points!')
 
 
