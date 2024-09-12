@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cse6040_devkit"
-version = "0.0.3-beta.1"
+version = "0.0.3-beta.2"
 authors = [
   { name="Albert Waldron", email="albert.r.waldron@gmail.com" },
 ]

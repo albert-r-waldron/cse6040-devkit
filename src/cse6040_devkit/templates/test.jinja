@@ -3,7 +3,9 @@
 {% if ex.config and ex.test %}# Load testing utility
 with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
     execute_tests = dill.load(f)
-
+{% if ex.test.plugin_kwargs %}
+    plugin_kwargs = utils.load_object_from_publicdata('{{ ex_name }}_plugin_kwargs')
+{% endif %}
 # Execute test
 passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
               ex_name='{{ ex_name }}',
