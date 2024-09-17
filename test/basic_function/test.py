@@ -45,6 +45,11 @@ fizzbuzz_soln(16) -> 16
     """
     for i in [12, 10, 15, 16]:
         print(f'fizzbuzz_soln({i}) -> {fizzbuzz_soln(i)}')
+    
+    
+    
+    ### BEGIN IGNORE
+    return 'Scooby Doo!'
 
 # Register a plugin to be used in solution testing
 @bp.register_plugin()

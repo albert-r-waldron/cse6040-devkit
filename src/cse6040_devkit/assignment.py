@@ -63,7 +63,18 @@ class AssignmentBlueprint():
             }
             with open(self.keys_path, 'wb') as f:
                 dill.dump(self.keys, f)
-
+    def parse_ignore(self, s):
+        kept = []
+        ignoring = False
+        for line in s.splitlines():
+            if '### BEGIN IGNORE' in line:
+                ignoring = True
+            if not ignoring:
+                kept.append(line)
+            if '### END IGNORE' in line:
+                ignoring = False
+        return '\n'.join(kept)
+    
     def register_notebook_function(self, ex_name, func_type):
         """Decorator that registers a notebook function to the blueprint.
 
@@ -84,7 +95,7 @@ class AssignmentBlueprint():
             self.core[ex_name] = self.core.get(ex_name, {})
             self.core[ex_name][func_type] = {
                 'name': func.__name__,
-                'source': inspect.getsource(func),
+                'source': self.parse_ignore(inspect.getsource(func)),
                 'annotations': {} if func.__annotations__ is None \
                     else{k: str(v).split("'")[1] for k, v in func.__annotations__.items()}
             }
