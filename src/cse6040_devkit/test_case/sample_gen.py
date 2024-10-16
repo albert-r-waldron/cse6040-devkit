@@ -3,6 +3,9 @@ from .input_gen_utils import dfs_to_conn
 from warnings import warn
 from numpy.random import default_rng
 from inspect import signature
+import logging
+
+logger = logging.getLogger(__name__)
 
 class SampleGenerator(TestCaseGenerator):
     def __init__(self, test_func, sampler_func, output_names=None, seed=None):
