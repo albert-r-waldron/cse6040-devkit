@@ -4,9 +4,12 @@ class Tester(ExerciseTester):
     def __init__(self, conf, key, path):
         import dill as pickle
         from cryptography.fernet import Fernet
+        from random import shuffle
         fernet = Fernet(key)
         with open(f"{path}{conf['case_file']}", 'rb') as fin:
             self.cases = pickle.loads(fernet.decrypt(fin.read()))
+        shuffle(self.cases)
+        self.cases_iter = (case for case in self.cases)
         self.func = conf['func']
         self.conf_inputs = conf['inputs']
         self.conf_outputs = conf['outputs']
@@ -43,7 +46,11 @@ class Tester(ExerciseTester):
     def build_vars(self):
         from .test_utils import dfs_to_conn
         from random import choice
-        case = choice(self.cases)
+        try:
+            case = next(self.cases_iter)
+        except StopIteration:
+            self.cases_iter = (case for case in self.cases)
+            case = next(self.cases_iter)
         for input_key, input_dict in self.conf_inputs.items():
             if input_dict['dtype'] == 'db':
                 temp_conn = dfs_to_conn(case[input_key])
