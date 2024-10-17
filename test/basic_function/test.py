@@ -1,6 +1,12 @@
 #%%
 # Import whatever is needed as well as these modules from the devkit.
 from cse6040_devkit import assignment, utils, plugins
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filemode='w',
+                    filename='build_log.txt', 
+                    level=logging.INFO)
 
 # Create an instance of AssignmentBlueprint
 bp = assignment.AssignmentBlueprint(include_hidden=False)
