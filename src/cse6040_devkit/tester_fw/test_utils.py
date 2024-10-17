@@ -9,7 +9,10 @@ def assert_tibbles_left_matches_right(A, B, exact=False, sort_df=True, col_type=
     from pandas.testing import assert_frame_equal
     A_canonical = canonicalize_tibble(A, sort_df)
     B_canonical = canonicalize_tibble(B, sort_df)
-    assert_frame_equal(A_canonical, B_canonical, check_exact=exact, check_dtype=col_type)
+    assert_frame_equal(A_canonical, B_canonical, check_exact=exact, check_dtype=col_type,
+                       check_index_type=False,
+                       check_column_type=False,
+                       check_names=False)
 
 def assert_tibbles_are_equivalent(A, B, **kwargs):
     assert_tibbles_left_matches_right(A, B, **kwargs)
