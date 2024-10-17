@@ -10,6 +10,9 @@ import cse6040_devkit.utils
 import dill
 from cryptography.fernet import Fernet
 from random import randint
+import logging
+
+logger = logging.getLogger(__name__)
 
 def execute_tests(func,
                   ex_name,
@@ -27,16 +30,17 @@ def execute_tests(func,
         ex_conf = safe_load(f)['exercises'][ex_name]['config']
     ex_conf['func'] = func
     tester = Tester(ex_conf, key, path)
-    for _ in range(n_iter):
+    for i in range(n_iter):
         try:
             tester.run_test()
             test_case_vars = tester.get_test_vars()
+            print(test_case_vars)
         except Exception as e:
             test_case_vars = tester.get_test_vars()
-            print(f'{ex_name} test ran {n_iter} iterations in {time() - ex_start:.2f} seconds')
+            print(f'{ex_name} test ran {i} iterations in {time() - ex_start:.2f} seconds')
             print(str(e))
             return False, test_case_vars
-    print(f'{ex_name} test ran {n_iter} iterations in {time() - ex_start:.2f} seconds')
+    print(f'{ex_name} test ran {i} iterations in {time() - ex_start:.2f} seconds')
     return True, test_case_vars
 
 class AssignmentBlueprint():
@@ -48,6 +52,9 @@ class AssignmentBlueprint():
         Args:
         - keys_path (str) (optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'
         '''
+        logger.info(f'''Constructing AssignmentBlueprint:
+        {keys_path=}
+        {include_hidden=}''')
         self.core = {}
         self.included = {}
         self.keys_path = keys_path
@@ -55,6 +62,8 @@ class AssignmentBlueprint():
         if os.path.exists(keys_path):
             with open(keys_path, 'rb') as f:
                 self.keys = dill.load(f)
+            logger.info(f'Reading keys from file')
+            logger.info(f'{self.keys=}')
         else:
             self.keys = {
                 'visible_key': Fernet.generate_key(),
@@ -71,6 +80,8 @@ class AssignmentBlueprint():
                 ignoring = True
             if not ignoring:
                 kept.append(line)
+            else:
+                logger.info(f"Ignoring line {line}")
             if '### END IGNORE' in line:
                 ignoring = False
         return '\n'.join(kept)
@@ -90,7 +101,9 @@ class AssignmentBlueprint():
         """                
         valid_func_types = ('solution', 'demo', 'helper')
         if func_type not in valid_func_types:
+            logger.error(f'''func_type must be one of {valid_func_types}''')
             raise ValueError(f'''func_type must be one of {valid_func_types}''')
+        logger.info(f'''Registering {func_type} function for exercise '{ex_name}'.''')
         def _register_function(func):
             self.core[ex_name] = self.core.get(ex_name, {})
             self.core[ex_name][func_type] = {
@@ -103,16 +116,20 @@ class AssignmentBlueprint():
                 self.core[ex_name][func_type]['docstring'] = dedent(func.__doc__)
                 self.core[ex_name][func_type]['source'] = self.core[ex_name][func_type]['source']\
                     .replace(f'\n    """{func.__doc__}"""', '')
+            logger.info(f'''Finished regestering''')
+            logger.info(f'Set core["{ex_name}"]["{func_type}"] = {self.core[ex_name][func_type]}')
             return func
         return _register_function
     
     def _register_included_function(self, func_type):
         def _registered_function(func):
             func_name = func.__name__
+            logger.info(f"Registering {func_type} function {func_name}")
             self.included[func_type] = self.included.get(func_type, {})
             self.included[func_type][func_name] = func
             setattr(eval(f'cse6040_devkit.{func_type}'), func_name, func)
-            # cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
+            logger.info(f"Finished registering")
+            logger.info(f"Function is callable as cse6040_devkit.{func_type}.{func_name}")
             return func
         return _registered_function
 
@@ -201,6 +218,7 @@ class AssignmentBlueprint():
         if isinstance(output_names, str):
             output_names = (output_names,)
         def _register_sampler(sampler_func):
+            logger.info(f"Registering sampler function {sampler_func.__name__} for exercise {ex_name}")
             self.core[ex_name] = self.core.get(ex_name, {})
             self.core[ex_name]['test'] = {}
             self.core[ex_name]['test']['visible_path'] = f'resource/asnlib/publicdata/tc_{ex_name}'
@@ -220,6 +238,8 @@ class AssignmentBlueprint():
             else:
                 self.core[ex_name]['test']['sol_func_name'] = sol_func.__name__
                 tc_gen = SampleGenerator(sol_func, sampler_func, output_names, seed=seed)
+            tc_gen.make_inputs()
+            self.core[ex_name]['test']['db_key'] = tc_gen.db_key
             self.core[ex_name]['test']['tc_gen'] = tc_gen
             self.core[ex_name]['test']['visible_key'] = self.keys['visible_key']
             self.core[ex_name]['test']['hidden_key'] = self.keys['hidden_key']
@@ -230,6 +250,8 @@ class AssignmentBlueprint():
                     self.core[ex_name]['test']['sol_func_argspec'].args.append(arg)
             if plugin_kwargs:
                 self.core[ex_name]['test']['plugin_kwargs'] = plugin_kwargs
+            logger.info(f"Registration finished")
+            logger.info(f"core['{ex_name}']['test] = {self.core[ex_name]['test']}")
             return sampler_func
         return _register_sampler
     
@@ -244,6 +266,7 @@ class AssignmentBlueprint():
         self.core[ex_name] = self.core.get(ex_name, {})
         self.core[ex_name]['preload_objects'] = self.core[ex_name].get('preload_objects', {})
         self.core[ex_name]['preload_objects'][obj_name] = obj
+        logger.info(f'Registered preload object: {obj_name} for exercise {ex_name}')
 
 class AssignmentBuilder(AssignmentBlueprint):
     def __init__(self, 
@@ -251,7 +274,10 @@ class AssignmentBuilder(AssignmentBlueprint):
                  notebook_path='main.ipynb',
                  keys_path='keys.dill',
                  header=True,
-                 include_hidden=True):
+                 include_hidden=True,
+                 kernelspec={'kernelspec': {"display_name": "Python 3.8",
+                                       "language": "python",
+                                       "name": "python38"}}):
         """Assignment Builders are an extension of blueprints. In addition to being able to register components, AssignmentBuilders can register other blueprints and build all of the components into a Jupyter notebook.
 
         Args:
@@ -259,20 +285,31 @@ class AssignmentBuilder(AssignmentBlueprint):
             notebook_path (str, optional): Path to the target notebook. Defaults to 'main.ipynb'.
             keys_path (str, optional): Name of the file where encryption keys are stored. Defaults to 'keys.dill'.
         """
+
+        logger.info(f'''Constructing AssignmentBuilder''')
         super().__init__(keys_path=keys_path, include_hidden=include_hidden)
         self.config_path = config_path
         self.notebook_path = notebook_path
         self.header = header
+        self.kernelspec = kernelspec
+        logger.info(f'\n{config_path=}\n{notebook_path=}\n{header=}\n{include_hidden=}\n{kernelspec}')
         if os.path.exists(config_path):
+            logger.info('Loading config from file')
             with open(config_path) as f:
                 self.config = yaml.safe_load(f)
+            logger.info('Config loaded')
         else:
+            logger.info('Config file not found')
             self.config = {}
+            logger.info('Config initialized')
         if os.path.exists(notebook_path):
+            logger.info(f'Loading notebook from file')
             with open(notebook_path) as f:
                 self.nb = nbf.read(f, as_version=4)
         else:
+            logger.info('Notebook file not found')
             self.nb = nbf.v4.new_notebook()
+            logger.info('Notebook initialized')
         self.env = Environment(loader=PackageLoader('cse6040_devkit'))
 
     def register_blueprint(self, other):
@@ -286,19 +323,26 @@ class AssignmentBuilder(AssignmentBlueprint):
         Raises:
             ValueError: When attempting to register an exercise name/function type which already exists.
         """
+        logger.info(f'Registering blueprint to the builder')
         for ex_name in other.core:
+            logger.info(f'Registering data for {ex_name}')
             if ex_name in self.core:
-                # exercise exists in core
+                logger.info(f'{ex_name} already exists in the builder. Registering functions one at a time.')
                 for func_type, attributes in other.core[ex_name].items():
+                    logger.info(f'Registering {func_type} function for exercise {ex_name}')
                     if func_type in self.core[ex_name]:
                         # function type already registered - ERROR condition
-                        raise ValueError(f'''Can not register duplicates. The name {ex_name}.{func_type} found in {other.__name__} already exists in {self.__name__}''')
+                        logger.error(f'''Can not register duplicates of the same function type and exercise. The name {ex_name}.{func_type} already exists.''')
+                        raise ValueError(f'''Can not register duplicates. The name {ex_name}.{func_type} already exists.''')
                     else:
                         # function type not already registered
                         self.core[ex_name][func_type] = attributes
+                        logger.info('Registered.')
             else:
                 # new exercise in the other core
+                logger.info(f'{ex_name} not found in the builder. Registering entire exercise.')
                 self.core[ex_name] = other.core[ex_name]
+                logger.info(f'Registered.')
         self.included.update(other.included)
 
     def register_blueprints(self, others):
@@ -313,7 +357,8 @@ class AssignmentBuilder(AssignmentBlueprint):
             self.register_blueprint(other)
 
     def _write_nb(self):
-        self.nb.metadata = {}
+        logger.info(f'Writing notebook to {self.notebook_path}')
+        self.nb.metadata = self.kernelspec
         for idx, cell in enumerate(self.nb.cells):
             cell.id = f'{idx}'
             if cell.cell_type == 'code':
@@ -321,22 +366,33 @@ class AssignmentBuilder(AssignmentBlueprint):
                 cell.execution_count = None
         with open(self.notebook_path, 'w') as f:
             nbf.write(self.nb, f)
+        logger.info('Notebook written.')
 
     def _create_markdown_cell(self, ex_name, tag, source):
+        full_tag = f'{ex_name}.{tag}'
+        logger.info(f"Creating markdown cell with metadata tag {full_tag}")
         cell = nbf.v4.new_markdown_cell(source=source)
-        cell.metadata.tags = [f'{ex_name}.{tag}']
+        cell.metadata.tags = [full_tag]
+        logger.info(f"Cell successfully created; {full_tag=}")
         return cell
 
     def _create_code_cell(self, ex_name, tag, source):
+        full_tag = f'{ex_name}.{tag}'
+        logger.info(f"Creating code cell with metadata tag {full_tag}")
         cell = nbf.v4.new_code_cell(source=source)
-        cell.metadata.tags = [f'{ex_name}.{tag}']
+        cell.metadata.tags = [full_tag]
+        logger.info(f"Cell successfully created; {full_tag=}")
         return cell
     
     def _render_template(self, t_name:str, **kwargs):
+        logger.info(f"Rendering template {t_name}")
         t = self.env.get_template(t_name)
+        logger.info(f"Template {t_name} rendered")
         return t.render(**kwargs)
 
     def _update_config_from_core(self):
+        logger.info(f"Updating the configuration based on core registry")
+        logger.info("Setting default top level values")
         temp_config = {'assignment_name': 'assignment name',
                        'subtitle': 'assignment subtitle',
                        'version': '0.0.1',
@@ -345,9 +401,12 @@ class AssignmentBuilder(AssignmentBlueprint):
                        'total_points': 'total points',
                        'global_imports': None,
                        'exercises': {}}
+        logger.info(f"Updating default values with config read from file.")
         temp_config.update(self.config)
         self.config = temp_config
+        logger.info(f"Top level config set. Updating exercise configurations.")
         for ex_num, (ex_name, ex) in enumerate(self.core.items()):
+            logger.info(f"Setting default values for exercise {ex_name}")
             ex_test = ex.get('test')
             temp_exercise = {
                 'num': ex_num,
@@ -355,18 +414,25 @@ class AssignmentBuilder(AssignmentBlueprint):
                 'n_visible_trials': 100,
                 'n_hidden_trials': 1}
             if ex_test:
+                logger.info(f"Test is defined for exercise {ex_name}")
                 annotations = {k: str(v).split("'")[1] for k,v in ex_test['sol_func_argspec'].annotations.items()}
                 args = ex_test['sol_func_argspec'].args
+                db_key = ex_test.get('db_key', '')
+                if db_key:
+                    logger.info(f'Database connection registered as argument `{db_key}` for exercise {ex_name}')
+                else:
+                    logger.info(f'No database connection registered for exercise {ex_name}')
+                logger.info(f"Setting default test configuration values for exercise {ex_name}")
                 inputs = {var_name: {
-                    'dtype': annotations.get(var_name, ''),
-                    'check_modified': True} for var_name in args}
+                    'dtype': annotations.get(var_name, 'db' if var_name == db_key else ''),
+                    'check_modified': False if var_name == db_key else True} for var_name in args}
                 outputs = {var_name:{
                         'index': i,
                         'dtype': '',
                         'check_dtype': True,
                         'check_col_dtypes': True,
                         'check_col_order': True,
-                        'check_row_order': True,
+                        'check_row_order': False,
                         'check_column_type': True,
                         'float_tolerance': 0.000001
                     }
@@ -376,42 +442,60 @@ class AssignmentBuilder(AssignmentBlueprint):
                     'inputs': inputs,
                     'outputs': outputs
                     }
+                logger.info(f"Default test configuration values for exercise {ex_name} set")
                 plugin_kwargs = ex_test.get('plugin_kwargs')
                 if plugin_kwargs:
+                    logger.info(f"Serializing plugin kwarg mapping")
                     with open(f'resource/asnlib/publicdata/{ex_name}_plugin_kwargs', 'wb') as f:
                         dill.dump(plugin_kwargs, f)
+                    logger.info(f"Plugin kwarg mapping persisted")
+                logger.info(f"Updating exercise {ex_name} with values from file.")
             temp_exercise.update(self.config['exercises'].get(ex_name, {}))
             self.config['exercises'][ex_name] = temp_exercise
+            logger.info(f"Completed update of exercise {ex_name} configuration.")
         with open(self.config_path, 'w') as f:
             yaml.safe_dump(self.config, f, sort_keys=False)
+        logger.info(f"Config persisted in {self.config_path}")
 
     def _build_core_cells(self):
+        logger.info("Building core notebook cells.")
         from copy import deepcopy
+        logger.info("Merging core and config")
         exercises_core_config = {k:{**self.config['exercises'][k], **self.core.get(k, {})} for k in self.config['exercises']}
-        core_cells = {}
+        self.core_cells = {}
         # update header
         if self.header:
-            core_cells['main.header'] = self._create_markdown_cell(ex_name='main',
+            logger.info("Building header cell")
+            self.core_cells['main.header'] = self._create_markdown_cell(ex_name='main',
                                                             tag='header',
                                                             source=self._render_template('header.jinja', **self.config))
+        else:
+            logger.info("Header cell is suppressed.")
         # update global imports
+        logger.info(f"Building global imports cell")
         imports = self.config.get('global_imports')
-        core_cells['main.global_imports'] = self._create_code_cell(ex_name='main',
+        self.core_cells['main.global_imports'] = self._create_code_cell(ex_name='main',
                                                                    tag='global_imports',
                                                                    source = self._render_template('global_imports.jinja',
                                                                                             imports=imports,
                                                                                             plugins=self.included.get('plugins'),
                                                                                             utils=self.included.get('utils')))
         # update exercises
+        logger.info(f"Building exercise cell groups")
         for ex_num, (ex_name, ex) in enumerate(exercises_core_config.items()):
+            ex_str = 'for exercise {ex_name}'
             preload_objects = ex.get('preload_objects')
             if preload_objects:
-                core_cells[f'{ex_name}.preload_objects'] = \
+                logger.info(f"Building preload objects cell {ex_str}")
+                self.core_cells[f'{ex_name}.preload_objects'] = \
                     self._create_code_cell(ex_name=ex_name,
                                         tag='preload_objects',
                                         source=self._render_template('preload_from_file.jinja',
                                                                         preload_objects=preload_objects))
-            core_cells[f'{ex_name}.prompt'] = \
+            else:
+                logger.info(f"No preload objects registered {ex_str}")
+            logger.info(f"Building exercise {ex_name}")
+            self.core_cells[f'{ex_name}.prompt'] = \
                 self._create_markdown_cell(ex_name=ex_name,
                                            tag='prompt',
                                            source=self._render_template('prompt.jinja', 
@@ -420,17 +504,28 @@ class AssignmentBuilder(AssignmentBlueprint):
                                                                         ex_name=ex_name,
                                                                         **self.config))
             # update solution
+            logger.info(f"Building solution cell {ex_str}")
             helper_source = ex.get('helper', {}).get('source')
             if helper_source:
+                logger.info("Adding helper function")
                 helper_source = '\n'.join(helper_source.splitlines()[1:])
             demo_source = ex.get('demo', {}).get('source')
             if demo_source:
-                demo_source = '\n'.join(demo_source.splitlines()[2:])
+                logger.info("Adding demo")
+                import re
+                demo_source = demo_source.splitlines()[2:]
+                if re.search(r'^\s*return .*', demo_source[-1]):
+                    logger.info(f"Return statement found. Suppressing in target notebook.")
+                    demo_source = demo_source[:-1]
+                else:
+                    logger.info(f"No return statement found in demo.")
+                demo_source = '\n'.join(demo_source)
                 demo_source = dedent(demo_source)
             cleaned_solution_code = ex.get('solution', {}).get('source')
             if cleaned_solution_code:
+                logger.info(f"Solution code is registered {ex_str}.")
                 cleaned_solution_code = '\n'.join(cleaned_solution_code.splitlines()[1:])
-                core_cells[f'{ex_name}.solution'] = \
+                self.core_cells[f'{ex_name}.solution'] = \
                     self._create_code_cell(ex_name=ex_name,
                                            tag='solution',
                                            source=self._render_template('solution.jinja',
@@ -439,17 +534,25 @@ class AssignmentBuilder(AssignmentBlueprint):
                                                                         demo_source=demo_source,
                                                                         helper_source=helper_source))
                 # update test boilerplate
-                core_cells[f'{ex_name}.test_boilerplate'] = \
+                if ex.get('demo', {}).get('docstring'):
+                    logger.info(f"Adding demo docstring to test boilerplate {ex_str} ")
+                self.core_cells[f'{ex_name}.test_boilerplate'] = \
                     self._create_markdown_cell(ex_name=ex_name,
                                                tag='test_boilerplate',
                                                source=self._render_template('test_boilerplate.jinja',
                                                                             ex_name=ex_name,
                                                                             ex_num=ex_num,
                                                                             ex=ex))
+            else:
+                logger.info(f"No solution found {ex_str}. Skipping building solution and test boilerplate cells.")
             # update test
-            _ex = deepcopy(ex)
             if ex.get('free'):
+                logger.info(f"Exercise {ex_name} is designated as free. Rendering empty test.")
+                _ex = deepcopy(ex)
                 _ex['config'] = {}
+            else:
+                _ex = ex
+                logger.info(f"Building test {ex_str}")
             test_cell =  \
                 self._create_code_cell(ex_name=ex_name,
                                        tag='test',
@@ -465,9 +568,33 @@ class AssignmentBuilder(AssignmentBlueprint):
                 "points": ex['points'],
                 "solution": False
                 }})
-            core_cells[f'{ex_name}.test'] = test_cell
-        return deepcopy(core_cells)
+            self.core_cells[f'{ex_name}.test'] = test_cell
+        return deepcopy(self.core_cells)
     
+    def _write_artifact_files(self):
+        logger.info(f"Writing artifact files")
+        for ex in self.core.values():
+            test = ex.get('test')
+            if test and (not ex.get('free', False)):
+                logger.info(f"Writing test case files for {ex.get('name')}")
+                tc_gen = test['tc_gen']
+                tc_gen.write_cases(test['visible_path'], test['n_cases'], key=self.keys['visible_key'])
+                tc_gen.write_cases(test['hidden_path'], test['n_cases'], key=self.keys['hidden_key'])
+            else:
+                logger.info(f"No test cases to write for {ex.get('name')}")
+            preload_objects = ex.get('preload_objects')
+            if preload_objects:
+                for obj_name, obj in preload_objects.items():
+                    logger.info(f"Writing preload object file {obj_name} for {ex.get('name')}")
+                    cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
+        logger.info("Writing 'execute_tests' file.")
+        cse6040_devkit.utils.dump_object_to_publicdata(execute_tests, 'execute_tests')
+        for _, funcs in self.included.items():
+            for func_name, func in funcs.items():
+                logger.info(f"Writing '{func_name}' file.")
+                cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
+        logger.info("Artifact files successfully written.")
+
     def build(self):
         """Builds an assignment based on the components registered to the builder. The target notebook will be cleared of output, execution count, and environment metadata.
 
@@ -478,36 +605,35 @@ class AssignmentBuilder(AssignmentBlueprint):
             - Any core cells are updated in place
             - Any non-core cells are maintained as-is
             - The current sequence of cells is maintained as-is
-            - Any new non-core cells are appended to the end of the target notebook
+            - Any new core cells are appended to the end of the target notebook
         """
         if not os.path.exists('./resource/asnlib/publicdata'):
+            logger.info("Creating directory ./resource/asnlib/publicdata")
             os.makedirs('./resource/asnlib/publicdata')
         if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
+            logger.info("Creating directory ./resource/asnlib/publicdata/encrypted")
             os.makedirs('./resource/asnlib/publicdata/encrypted')
         self._update_config_from_core()
-        for ex in self.core.values():
-            test = ex.get('test')
-            if test and (not ex.get('free', False)):
-                tc_gen = test['tc_gen']
-                tc_gen.write_cases(test['visible_path'], test['n_cases'], key=self.keys['visible_key'])
-                tc_gen.write_cases(test['hidden_path'], test['n_cases'], key=self.keys['hidden_key'])
-            preload_objects = ex.get('preload_objects')
-            if preload_objects:
-                for obj_name, obj in preload_objects.items():
-                    cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
-        cse6040_devkit.utils.dump_object_to_publicdata(execute_tests, 'execute_tests')
-        for func_type, funcs in self.included.items():
-            for func_name, func in funcs.items():
-                cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
+        self._write_artifact_files()
         core_cells = self._build_core_cells()
         final_nb = nbf.v4.new_notebook()
+        logger.info(f"Iterating over cells in {self.notebook_path}")
         for cell in self.nb.cells:
             tags = cell.metadata.get('tags')
-            if tags and (tags[0] in core_cells):
+            if tags:
+                logger.info(f"Found tags {tags} in existing notebook")
+            else:
+                logger.info(f"Cell is untagged")
+            tag_match_core_cell = (tags[0] in core_cells)
+            if tags and tag_match_core_cell:
+                logger.info(f"Core cell with tag {tags[0]} found. Updating from this AssignmentBuilder")
                 final_nb.cells.append(core_cells.pop(tags[0]))
             else:
+                logger.info("No core cell with matching tag exists. Leaving unchanged.")
                 final_nb.cells.append(cell)
-        for cell in core_cells.values():
+        logger.info("Finished with existing notebook cells. Appending remaining core cells.")
+        for cell_tag, cell in core_cells.items():
+            logger.info(f"Appending core cell with tags {cell_tag}")
             final_nb.cells.append(cell)
         self.nb = final_nb
         self._write_nb()
