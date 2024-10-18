@@ -18,13 +18,13 @@ def execute_tests(func,
                   ex_name,
                   key,
                   n_iter,
-                  hidden=False):
+                  hidden=False,
+                  conf_path='resource/asnlib/publicdata/assignment_config.yaml',
+                  path = 'resource/asnlib/publicdata/'):
     from time import time
     ex_start = time()
     from cse6040_devkit.tester_fw.testers import Tester
     from yaml import safe_load
-    conf_path ='resource/asnlib/publicdata/assignment_config.yaml'
-    path = 'resource/asnlib/publicdata/'
     if hidden: path += 'encrypted/'
     with open(conf_path) as f:
         ex_conf = safe_load(f)['exercises'][ex_name]['config']
