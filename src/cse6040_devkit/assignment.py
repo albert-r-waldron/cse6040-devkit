@@ -456,6 +456,11 @@ class AssignmentBuilder(AssignmentBlueprint):
         with open(self.config_path, 'w') as f:
             yaml.safe_dump(self.config, f, sort_keys=False)
         logger.info(f"Config persisted in {self.config_path}")
+        try:
+            logger.info("Creating symlink to config file in working directory")
+            os.symlink(self.config_path, 'assignment_config.yaml')
+        except:
+            logger.warning("Unable to create symlink. It may already exist.")
 
     def _build_core_cells(self):
         logger.info("Building core notebook cells.")
