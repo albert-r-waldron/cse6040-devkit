@@ -9,7 +9,10 @@ def assert_tibbles_left_matches_right(A, B, exact=False, sort_df=True, col_type=
     from pandas.testing import assert_frame_equal
     A_canonical = canonicalize_tibble(A, sort_df)
     B_canonical = canonicalize_tibble(B, sort_df)
-    assert_frame_equal(A_canonical, B_canonical, check_exact=exact, check_dtype=col_type)
+    assert_frame_equal(A_canonical, B_canonical, check_exact=exact, check_dtype=col_type,
+                       check_index_type=False,
+                       check_column_type=False,
+                       check_names=False)
 
 def assert_tibbles_are_equivalent(A, B, **kwargs):
     assert_tibbles_left_matches_right(A, B, **kwargs)
@@ -30,29 +33,42 @@ def compare_copies(a, b, tol=0, exact=False, sort_df=True, col_type=True):
             if len(a) != len(b): return False
             return all(compare_copies(ai, bi, **kwargs) for ai, bi in zip(a, b))
         # set
-        if isinstance(a, set) and isinstance(b, set):
+        elif isinstance(a, set) and isinstance(b, set):
             if len(a) != len(b): return False
             return not (a - b)
         # dict
-        if isinstance(a, dict) and isinstance(b, dict):
+        elif isinstance(a, dict) and isinstance(b, dict):
             if set(a.keys()) != set(b.keys()): return False
             return all(compare_copies(va, b[ka], **kwargs) for ka, va in a.items())
         # DataFrame
-        if isinstance(a, pd.DataFrame):
+        elif isinstance(a, pd.DataFrame):
             try:
                 assert_tibbles_left_matches_right(a, b, exact, sort_df, col_type)
                 return True
             except AssertionError:
                 return False
         # Series
-        if isinstance(a, (int, np.int64, float,  pd.Series)) \
-            and isinstance(b, (int, np.int64, float,  pd.Series)):
+        elif isinstance(a, pd.Series) \
+            and isinstance(b, pd.Series):
+            if sort_df:
+                a = a.sort_index()
+                b = b.sort_index()
+                a = a.sort_values()
+                b = b.sort_values()
             try:
-                return np.isclose(a, b, atol=tol, rtol=0, equal_nan=True)
-            except:
-                pass
+                pd.testing.assert_series_equal(a, b,
+                                               check_index_type=False,
+                                               check_names=False,
+                                               )
+                return True
+            except Exception as e:
+                print(e)
+                return False
+        # ints and floats
+        elif isinstance(a, (int, np.int64, float)) \
+            and isinstance(b, (int, np.int64, float)):
             try:
-                return (a == b).all()
+                return np.isclose(a, b)
             except:
                 raise
         # string or boolean
@@ -60,15 +76,19 @@ def compare_copies(a, b, tol=0, exact=False, sort_df=True, col_type=True):
             and isinstance(b, (str, bool,)):
 
             return a == b
-        
+        # Array
         elif isinstance(a, (np.ndarray,)) \
             and isinstance(b, (np.ndarray,)):
-
             return np.allclose(a, b, atol=tol, rtol=0, equal_nan=True)
+        
+        # None
         elif (a is None and b is None):
             return True
+        
+        else:
+            return a == b
     except Exception as e:
-        print(e.__traceback__)
+        print(e)
         return False
 
 

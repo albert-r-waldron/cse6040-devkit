@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+src/cse6040_devkit/__pycache__/*
+src/cse6040_devkit/test_case/__pycache__/*
+src/cse6040_devkit/tester_fw/__pycache__/*
 # C extensions
 *.so
 

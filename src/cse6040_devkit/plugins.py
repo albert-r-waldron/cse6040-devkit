@@ -1,4 +1,5 @@
 import dill
+from warnings import warn
 ###
 ### Define plugins in this file
 ###
@@ -9,6 +10,7 @@ def postprocess_sort(func, key=None):
     Args:
         func (function): An exercise solution function. This function should output a list.
         key (function, optional): The key function for sorting. The sort key should be sufficient to correctly sort any expected output into a deterministic order. Defaults to None.
+        
     
     Returns (function): 
         - same inputs as `func`
@@ -58,7 +60,10 @@ def sql_executor(query_generator):
     """
     import pandas as pd
     def _execute(conn, *args, **kwargs):
-        query = query_generator(*args, **kwargs)
+        if callable(query_generator):
+            query = query_generator(*args, **kwargs)
+        else:
+            query = query_generator
         return pd.read_sql(query, conn)
     return _execute
 
@@ -84,4 +89,26 @@ def sqlite_blocker(func):
         finally:
             sqlite3.connect = placeholder
         return result
+    return _func
+
+def coo_plugin(func):
+    r"""
+    Wraps a function that returns a `scipy.sparse.coo_matrix`. 
+    
+    All arguments are passed directly to the inner function. 
+
+    Returns the shape, data, row, and col attributes of the `coo_matrix` returned by the inner function.
+    """
+    def _func(*args, **kwargs):
+        coo_result = func(*args, **kwargs)
+        try:
+            return (
+                coo_result.shape,
+                coo_result.data,
+                coo_result.row,
+                coo_result.col
+            )
+        except:
+            warn('Unable to extract expected attributes from result. Raw result is being returned and is likely not correct.')
+            return coo_result
     return _func
