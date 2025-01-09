@@ -1,0 +1,1 @@
+# register helper function separate from all other func types

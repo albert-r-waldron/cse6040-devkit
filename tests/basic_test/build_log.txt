@@ -1,0 +1,787 @@
+INFO:cse6040_devkit.assignment:Constructing AssignmentBlueprint:
+        keys_path='keys.dill'
+        include_hidden=True
+INFO:cse6040_devkit.assignment:Reading keys from file
+INFO:cse6040_devkit.assignment:self.keys={'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'rng_seed': 8035}
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'inverted_dictionary'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'extract_article_words'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'count_articles'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'record_examiner'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'conn_to_df'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: char_df for exercise species_count
+INFO:cse6040_devkit.assignment:Registered preload object: spec_df for exercise species_count
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'species_count'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'count_values'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'mat_vec_div'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'df_to_coo'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering helper function for exercise 'load_the_data'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registering utils function do_something
+INFO:cse6040_devkit.assignment:Finished registering
+INFO:cse6040_devkit.assignment:Function is callable as cse6040_devkit.utils.do_something
+INFO:cse6040_devkit.assignment:Registering solution function for exercise 'load_the_data'.
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Constructing AssignmentBlueprint:
+        keys_path='keys.dill'
+        include_hidden=True
+INFO:cse6040_devkit.assignment:Reading keys from file
+INFO:cse6040_devkit.assignment:self.keys={'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'rng_seed': 8035}
+INFO:cse6040_devkit.assignment:Registering sampler function invert_dict_sampler for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['inverted_dictionary']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_inverted_dictionary', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_inverted_dictionary', 'n_cases': 500, 'include_hidden': True, 'sol_func_name': 'plugins.error_handler(invert_dict)', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb72eeb0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('error_raised', 'inverted_dictionary_output'), 'sol_func_argspec': FullArgSpec(args=['d', 'allow_dup_vals', 'allow_unhashable_vals'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={'return': <class 'dict'>, 'd': <class 'dict'>, 'allow_dup_vals': <class 'bool'>, 'allow_unhashable_vals': <class 'bool'>})}
+INFO:cse6040_devkit.assignment:Registering sampler function cq_sampler for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['concatenate_quotes']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_concatenate_quotes', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_concatenate_quotes', 'n_cases': 10, 'include_hidden': True, 'sol_func_name': 'plugins.sql_executor(concatenate_quotes_query)', 'db_key': 'conn', 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb7390d0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': ArgSpec(annotations={'conn': "'db'"}, args=['conn', 'conn'])}
+INFO:cse6040_devkit.assignment:Registering sampler function extract_article_words_sampler for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['extract_article_words']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_extract_article_words', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_extract_article_words', 'n_cases': 20, 'include_hidden': True, 'sol_func_name': 'extract_article_words', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb739580>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['record'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={'return': <class 'set'>, 'record': <class 'dict'>})}
+INFO:cse6040_devkit.assignment:Registering sampler function count_articles_sampler for exercise count_articles
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['count_articles']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_count_articles', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_count_articles', 'n_cases': 20, 'include_hidden': True, 'sol_func_name': 'count_articles', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb739520>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['running_count', 'article_words'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={'running_count': <class 'collections.Counter'>})}
+INFO:cse6040_devkit.assignment:Registering sampler function record_examiner_sampler for exercise record_examiner
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['record_examiner']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_record_examiner', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_record_examiner', 'n_cases': 20, 'include_hidden': True, 'sol_func_name': 'record_examiner', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb739fd0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['some_iter', 'map_func', 'red_func', 'initial'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Registering sampler function cq_sampler for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['conn_to_df']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_conn_to_df', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_conn_to_df', 'n_cases': 10, 'include_hidden': True, 'sol_func_name': 'concatenate_quotes_conn_to_df', 'db_key': 'conn', 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb739ca0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['conn'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Registering sampler function species_count_sampler for exercise species_count
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['species_count']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_species_count', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_species_count', 'n_cases': 20, 'include_hidden': True, 'sol_func_name': 'species_count', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb739610>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['char_df', 'spec_df'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Registering sampler function count_values_sampler for exercise count_values
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['count_values']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_count_values', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_count_values', 'n_cases': 40, 'include_hidden': True, 'sol_func_name': 'count_values', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb4d32b0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['s'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Registering sampler function mat_vec_div_sampler for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['mat_vec_div']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_mat_vec_div', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_mat_vec_div', 'n_cases': 20, 'include_hidden': True, 'sol_func_name': 'mat_vec_div', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb4d31c0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('result',), 'sol_func_argspec': FullArgSpec(args=['A', 'x'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Registering sampler function df_to_coo_sampler for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Registration finished
+INFO:cse6040_devkit.assignment:core['df_to_coo']['test] = {'visible_path': 'resource/asnlib/publicdata/tc_df_to_coo', 'hidden_path': 'resource/asnlib/publicdata/encrypted/tc_df_to_coo', 'n_cases': 15, 'include_hidden': True, 'sol_func_name': 'plugins.coo_plugin(df_to_coo)', 'db_key': None, 'tc_gen': <cse6040_devkit.test_case.sample_gen.SampleGenerator object at 0x7fa8bb4d3ee0>, 'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'output_names': ('shape', 'data', 'row', 'col'), 'sol_func_argspec': FullArgSpec(args=['df', 'shape'], varargs=None, varkw=None, defaults=None, kwonlyargs=[], kwonlydefaults=None, annotations={})}
+INFO:cse6040_devkit.assignment:Constructing AssignmentBlueprint:
+        keys_path='keys.dill'
+        include_hidden=True
+INFO:cse6040_devkit.assignment:Reading keys from file
+INFO:cse6040_devkit.assignment:self.keys={'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'rng_seed': 8035}
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_count_articles_TRUE for exercise count_articles
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_extract_article_words_TRUE for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_record_examiner_TRUE for exercise record_examiner
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_concatenate_quotes_TRUE for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_conn_to_df_TRUE for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_species_count_TRUE for exercise species_count
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_count_values_TRUE for exercise count_values
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_mat_vec_div_TRUE for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Registered preload object: demo_result_df_to_coo_TRUE for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Finished regestering
+INFO:cse6040_devkit.assignment:Constructing AssignmentBuilder
+INFO:cse6040_devkit.assignment:Constructing AssignmentBlueprint:
+        keys_path='keys.dill'
+        include_hidden=True
+INFO:cse6040_devkit.assignment:Reading keys from file
+INFO:cse6040_devkit.assignment:self.keys={'visible_key': b'6AfuzbXbZoimCVSPv56sgGDDXYXLpbmJ70319bJ5i54=', 'hidden_key': b'b3LurxufK6uXEsHMqKTylu4CvoYNzO0Oa6ByQxb5P3s=', 'rng_seed': 8035}
+INFO:cse6040_devkit.assignment:
+config_path='resource/asnlib/publicdata/assignment_config.yaml'
+notebook_path='main.ipynb'
+header=True
+include_hidden=True
+{'kernelspec': {'display_name': 'Python 3.8', 'language': 'python', 'name': 'python38'}}
+INFO:cse6040_devkit.assignment:Loading config from file
+INFO:cse6040_devkit.assignment:Config loaded
+INFO:cse6040_devkit.assignment:Loading notebook from file
+INFO:cse6040_devkit.assignment:Registering blueprint to the builder
+INFO:cse6040_devkit.assignment:Registering data for inverted_dictionary
+INFO:cse6040_devkit.assignment:inverted_dictionary not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for concatenate_quotes
+INFO:cse6040_devkit.assignment:concatenate_quotes not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for extract_article_words
+INFO:cse6040_devkit.assignment:extract_article_words not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_articles
+INFO:cse6040_devkit.assignment:count_articles not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for record_examiner
+INFO:cse6040_devkit.assignment:record_examiner not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for conn_to_df
+INFO:cse6040_devkit.assignment:conn_to_df not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for species_count
+INFO:cse6040_devkit.assignment:species_count not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_values
+INFO:cse6040_devkit.assignment:count_values not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for mat_vec_div
+INFO:cse6040_devkit.assignment:mat_vec_div not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for df_to_coo
+INFO:cse6040_devkit.assignment:df_to_coo not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering blueprint to the builder
+INFO:cse6040_devkit.assignment:Registering data for inverted_dictionary
+INFO:cse6040_devkit.assignment:inverted_dictionary already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for extract_article_words
+INFO:cse6040_devkit.assignment:extract_article_words already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_articles
+INFO:cse6040_devkit.assignment:count_articles already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise count_articles
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise count_articles
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for record_examiner
+INFO:cse6040_devkit.assignment:record_examiner already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise record_examiner
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise record_examiner
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for concatenate_quotes
+INFO:cse6040_devkit.assignment:concatenate_quotes already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for conn_to_df
+INFO:cse6040_devkit.assignment:conn_to_df already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for species_count
+INFO:cse6040_devkit.assignment:species_count already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise species_count
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering free function for exercise species_count
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise species_count
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_values
+INFO:cse6040_devkit.assignment:count_values already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise count_values
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise count_values
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for mat_vec_div
+INFO:cse6040_devkit.assignment:mat_vec_div already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for df_to_coo
+INFO:cse6040_devkit.assignment:df_to_coo already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering free function for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering solution function for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for load_the_data
+INFO:cse6040_devkit.assignment:load_the_data not found in the builder. Registering entire exercise.
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering blueprint to the builder
+INFO:cse6040_devkit.assignment:Registering data for inverted_dictionary
+INFO:cse6040_devkit.assignment:inverted_dictionary already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_articles
+INFO:cse6040_devkit.assignment:count_articles already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise count_articles
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise count_articles
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for extract_article_words
+INFO:cse6040_devkit.assignment:extract_article_words already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for record_examiner
+INFO:cse6040_devkit.assignment:record_examiner already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise record_examiner
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise record_examiner
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for concatenate_quotes
+INFO:cse6040_devkit.assignment:concatenate_quotes already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for conn_to_df
+INFO:cse6040_devkit.assignment:conn_to_df already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for species_count
+INFO:cse6040_devkit.assignment:species_count already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise species_count
+INFO:cse6040_devkit.assignment:Registering demo function for exercise species_count
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for count_values
+INFO:cse6040_devkit.assignment:count_values already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise count_values
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise count_values
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for mat_vec_div
+INFO:cse6040_devkit.assignment:mat_vec_div already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering data for df_to_coo
+INFO:cse6040_devkit.assignment:df_to_coo already exists in the builder. Registering functions one at a time.
+INFO:cse6040_devkit.assignment:Registering preload_objects function for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Registering demo function for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Registered.
+INFO:cse6040_devkit.assignment:Updating the configuration based on core registry
+INFO:cse6040_devkit.assignment:Setting default top level values
+INFO:cse6040_devkit.assignment:Updating default values with config read from file.
+INFO:cse6040_devkit.assignment:Top level config set. Updating exercise configurations.
+INFO:cse6040_devkit.assignment:Setting default values for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Test is defined for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:No database connection registered for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise inverted_dictionary set
+INFO:cse6040_devkit.assignment:Updating exercise inverted_dictionary with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise inverted_dictionary configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Test is defined for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Database connection registered as argument `conn` for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise concatenate_quotes set
+INFO:cse6040_devkit.assignment:Updating exercise concatenate_quotes with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise concatenate_quotes configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Test is defined for exercise extract_article_words
+INFO:cse6040_devkit.assignment:No database connection registered for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise extract_article_words set
+INFO:cse6040_devkit.assignment:Updating exercise extract_article_words with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise extract_article_words configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise count_articles
+INFO:cse6040_devkit.assignment:Test is defined for exercise count_articles
+INFO:cse6040_devkit.assignment:No database connection registered for exercise count_articles
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise count_articles
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise count_articles set
+INFO:cse6040_devkit.assignment:Updating exercise count_articles with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise count_articles configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise record_examiner
+INFO:cse6040_devkit.assignment:Test is defined for exercise record_examiner
+INFO:cse6040_devkit.assignment:No database connection registered for exercise record_examiner
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise record_examiner
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise record_examiner set
+INFO:cse6040_devkit.assignment:Updating exercise record_examiner with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise record_examiner configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Test is defined for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Database connection registered as argument `conn` for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise conn_to_df set
+INFO:cse6040_devkit.assignment:Updating exercise conn_to_df with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise conn_to_df configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise species_count
+INFO:cse6040_devkit.assignment:Test is defined for exercise species_count
+INFO:cse6040_devkit.assignment:No database connection registered for exercise species_count
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise species_count
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise species_count set
+INFO:cse6040_devkit.assignment:Updating exercise species_count with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise species_count configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise count_values
+INFO:cse6040_devkit.assignment:Test is defined for exercise count_values
+INFO:cse6040_devkit.assignment:No database connection registered for exercise count_values
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise count_values
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise count_values set
+INFO:cse6040_devkit.assignment:Updating exercise count_values with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise count_values configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Test is defined for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:No database connection registered for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise mat_vec_div set
+INFO:cse6040_devkit.assignment:Updating exercise mat_vec_div with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise mat_vec_div configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Test is defined for exercise df_to_coo
+INFO:cse6040_devkit.assignment:No database connection registered for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Setting default test configuration values for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Default test configuration values for exercise df_to_coo set
+INFO:cse6040_devkit.assignment:Updating exercise df_to_coo with values from file.
+INFO:cse6040_devkit.assignment:Completed update of exercise df_to_coo configuration.
+INFO:cse6040_devkit.assignment:Setting default values for exercise load_the_data
+INFO:cse6040_devkit.assignment:Completed update of exercise load_the_data configuration.
+INFO:cse6040_devkit.assignment:Config persisted in resource/asnlib/publicdata/assignment_config.yaml
+INFO:cse6040_devkit.assignment:Creating symlink to config file in working directory
+WARNING:cse6040_devkit.assignment:Unable to create symlink. It may already exist.
+INFO:cse6040_devkit.assignment:Writing artifact files
+INFO:cse6040_devkit.assignment:Writing test case files for inverted_dictionary
+INFO:cse6040_devkit.assignment:Writing test case files for concatenate_quotes
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_concatenate_quotes_TRUE for concatenate_quotes
+INFO:cse6040_devkit.assignment:Writing test case files for extract_article_words
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_extract_article_words_TRUE for extract_article_words
+INFO:cse6040_devkit.assignment:Writing test case files for count_articles
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_count_articles_TRUE for count_articles
+INFO:cse6040_devkit.assignment:Writing test case files for record_examiner
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_record_examiner_TRUE for record_examiner
+INFO:cse6040_devkit.assignment:Writing test case files for conn_to_df
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_conn_to_df_TRUE for conn_to_df
+INFO:cse6040_devkit.assignment:Writing test case files for species_count
+INFO:cse6040_devkit.assignment:Writing preload object file char_df for species_count
+INFO:cse6040_devkit.assignment:Writing preload object file spec_df for species_count
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_species_count_TRUE for species_count
+INFO:cse6040_devkit.assignment:Writing test case files for count_values
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_count_values_TRUE for count_values
+INFO:cse6040_devkit.assignment:Writing test case files for mat_vec_div
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_mat_vec_div_TRUE for mat_vec_div
+INFO:cse6040_devkit.assignment:Writing test case files for df_to_coo
+INFO:cse6040_devkit.assignment:Writing preload object file demo_result_df_to_coo_TRUE for df_to_coo
+INFO:cse6040_devkit.assignment:No test cases to write for load_the_data
+INFO:cse6040_devkit.assignment:Writing 'execute_tests' file.
+INFO:cse6040_devkit.assignment:Writing 'do_something' file.
+INFO:cse6040_devkit.assignment:Artifact files successfully written.
+INFO:cse6040_devkit.assignment:Building core notebook cells.
+INFO:cse6040_devkit.assignment:Merging core and config
+INFO:cse6040_devkit.assignment:Building header cell
+INFO:cse6040_devkit.assignment:Rendering template header.jinja
+INFO:cse6040_devkit.assignment:Template header.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag main.header
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='main.header'
+INFO:cse6040_devkit.assignment:Building global imports cell
+INFO:cse6040_devkit.assignment:Rendering template global_imports.jinja
+INFO:cse6040_devkit.assignment:Template global_imports.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag main.global_imports
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='main.global_imports'
+INFO:cse6040_devkit.assignment:Building exercise cell groups
+INFO:cse6040_devkit.assignment:No preload objects registered for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Building exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag inverted_dictionary.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='inverted_dictionary.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise inverted_dictionary.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag inverted_dictionary.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='inverted_dictionary.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise inverted_dictionary 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag inverted_dictionary.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='inverted_dictionary.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise inverted_dictionary
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag inverted_dictionary.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='inverted_dictionary.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag concatenate_quotes.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='concatenate_quotes.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag concatenate_quotes.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='concatenate_quotes.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise concatenate_quotes.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag concatenate_quotes.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='concatenate_quotes.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise concatenate_quotes 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag concatenate_quotes.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='concatenate_quotes.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise concatenate_quotes
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag concatenate_quotes.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='concatenate_quotes.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag extract_article_words.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='extract_article_words.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise extract_article_words
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag extract_article_words.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='extract_article_words.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise extract_article_words.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag extract_article_words.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='extract_article_words.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise extract_article_words 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag extract_article_words.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='extract_article_words.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise extract_article_words
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag extract_article_words.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='extract_article_words.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise count_articles
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_articles.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_articles.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise count_articles
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag count_articles.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_articles.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise count_articles
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise count_articles.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_articles.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_articles.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise count_articles 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag count_articles.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_articles.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise count_articles
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_articles.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_articles.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise record_examiner
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag record_examiner.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='record_examiner.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise record_examiner
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag record_examiner.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='record_examiner.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise record_examiner
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise record_examiner.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag record_examiner.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='record_examiner.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise record_examiner 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag record_examiner.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='record_examiner.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise record_examiner
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag record_examiner.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='record_examiner.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag conn_to_df.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='conn_to_df.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise conn_to_df
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag conn_to_df.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='conn_to_df.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise conn_to_df.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag conn_to_df.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='conn_to_df.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise conn_to_df 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag conn_to_df.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='conn_to_df.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise conn_to_df
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag conn_to_df.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='conn_to_df.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise species_count
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag species_count.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='species_count.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise species_count
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag species_count.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='species_count.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise species_count
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise species_count.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag species_count.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='species_count.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise species_count 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag species_count.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='species_count.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise species_count
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag species_count.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='species_count.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise count_values
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_values.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_values.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise count_values
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag count_values.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_values.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise count_values
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise count_values.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_values.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_values.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise count_values 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag count_values.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_values.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise count_values
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag count_values.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='count_values.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag mat_vec_div.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='mat_vec_div.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag mat_vec_div.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='mat_vec_div.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise mat_vec_div.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag mat_vec_div.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='mat_vec_div.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise mat_vec_div 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag mat_vec_div.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='mat_vec_div.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise mat_vec_div
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag mat_vec_div.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='mat_vec_div.test'
+INFO:cse6040_devkit.assignment:Building preload objects cell for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Rendering template preload_from_file.jinja
+INFO:cse6040_devkit.assignment:Template preload_from_file.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag df_to_coo.preload_objects
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='df_to_coo.preload_objects'
+INFO:cse6040_devkit.assignment:Building exercise df_to_coo
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag df_to_coo.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='df_to_coo.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Adding demo
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise df_to_coo.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag df_to_coo.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='df_to_coo.solution'
+INFO:cse6040_devkit.assignment:Adding demo docstring to test boilerplate for exercise df_to_coo 
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag df_to_coo.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='df_to_coo.test_boilerplate'
+INFO:cse6040_devkit.assignment:Building test for exercise df_to_coo
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag df_to_coo.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='df_to_coo.test'
+INFO:cse6040_devkit.assignment:No preload objects registered for exercise load_the_data
+INFO:cse6040_devkit.assignment:Building exercise load_the_data
+INFO:cse6040_devkit.assignment:Rendering template prompt.jinja
+INFO:cse6040_devkit.assignment:Template prompt.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag load_the_data.prompt
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='load_the_data.prompt'
+INFO:cse6040_devkit.assignment:Building solution cell for exercise load_the_data
+INFO:cse6040_devkit.assignment:Adding helper function
+INFO:cse6040_devkit.assignment:Solution code is registered for exercise load_the_data.
+INFO:cse6040_devkit.assignment:Rendering template solution.jinja
+INFO:cse6040_devkit.assignment:Template solution.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag load_the_data.solution
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='load_the_data.solution'
+INFO:cse6040_devkit.assignment:Rendering template test_boilerplate.jinja
+INFO:cse6040_devkit.assignment:Template test_boilerplate.jinja rendered
+INFO:cse6040_devkit.assignment:Creating markdown cell with metadata tag load_the_data.test_boilerplate
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='load_the_data.test_boilerplate'
+INFO:cse6040_devkit.assignment:Exercise load_the_data is designated as free. Rendering empty test.
+INFO:cse6040_devkit.assignment:Rendering template test.jinja
+INFO:cse6040_devkit.assignment:Template test.jinja rendered
+INFO:cse6040_devkit.assignment:Creating code cell with metadata tag load_the_data.test
+INFO:cse6040_devkit.assignment:Cell successfully created; full_tag='load_the_data.test'
+INFO:cse6040_devkit.assignment:Iterating over cells in main.ipynb
+INFO:cse6040_devkit.assignment:Found tags ['main.header'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag main.header found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['main.global_imports'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag main.global_imports found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['inverted_dictionary.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag inverted_dictionary.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['inverted_dictionary.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag inverted_dictionary.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['inverted_dictionary.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag inverted_dictionary.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['inverted_dictionary.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag inverted_dictionary.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['concatenate_quotes.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag concatenate_quotes.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['concatenate_quotes.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag concatenate_quotes.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Cell is untagged
+INFO:cse6040_devkit.assignment:No core cell with matching tag exists. Leaving unchanged.
+INFO:cse6040_devkit.assignment:Found tags ['concatenate_quotes.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag concatenate_quotes.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['concatenate_quotes.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag concatenate_quotes.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['concatenate_quotes.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag concatenate_quotes.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['extract_article_words.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag extract_article_words.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['extract_article_words.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag extract_article_words.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Cell is untagged
+INFO:cse6040_devkit.assignment:No core cell with matching tag exists. Leaving unchanged.
+INFO:cse6040_devkit.assignment:Found tags ['extract_article_words.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag extract_article_words.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['extract_article_words.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag extract_article_words.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['extract_article_words.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag extract_article_words.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_articles.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_articles.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_articles.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_articles.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_articles.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_articles.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_articles.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_articles.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_articles.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_articles.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Cell is untagged
+INFO:cse6040_devkit.assignment:No core cell with matching tag exists. Leaving unchanged.
+INFO:cse6040_devkit.assignment:Found tags ['record_examiner.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag record_examiner.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['record_examiner.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag record_examiner.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['record_examiner.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag record_examiner.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['record_examiner.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag record_examiner.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['record_examiner.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag record_examiner.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['conn_to_df.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag conn_to_df.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['conn_to_df.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag conn_to_df.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['conn_to_df.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag conn_to_df.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['conn_to_df.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag conn_to_df.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['conn_to_df.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag conn_to_df.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['species_count.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag species_count.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['species_count.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag species_count.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['species_count.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag species_count.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['species_count.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag species_count.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['species_count.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag species_count.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_values.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_values.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_values.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_values.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_values.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_values.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_values.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_values.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['count_values.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag count_values.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['mat_vec_div.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag mat_vec_div.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['mat_vec_div.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag mat_vec_div.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Cell is untagged
+INFO:cse6040_devkit.assignment:No core cell with matching tag exists. Leaving unchanged.
+INFO:cse6040_devkit.assignment:Found tags ['mat_vec_div.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag mat_vec_div.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['mat_vec_div.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag mat_vec_div.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['mat_vec_div.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag mat_vec_div.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['df_to_coo.preload_objects'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag df_to_coo.preload_objects found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['df_to_coo.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag df_to_coo.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['df_to_coo.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag df_to_coo.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['df_to_coo.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag df_to_coo.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['df_to_coo.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag df_to_coo.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['load_the_data.prompt'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag load_the_data.prompt found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['load_the_data.solution'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag load_the_data.solution found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['load_the_data.test_boilerplate'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag load_the_data.test_boilerplate found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Found tags ['load_the_data.test'] in existing notebook
+INFO:cse6040_devkit.assignment:Core cell with tag load_the_data.test found. Updating from this AssignmentBuilder
+INFO:cse6040_devkit.assignment:Finished with existing notebook cells. Appending remaining core cells.
+INFO:cse6040_devkit.assignment:Writing notebook to main.ipynb
+INFO:cse6040_devkit.assignment:Notebook written.

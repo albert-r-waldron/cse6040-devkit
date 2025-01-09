@@ -4,5 +4,293 @@ version: 0.0.1
 topics: this, that, and the other
 points_cap: points cap
 total_points: total points
-global_imports: null
-exercises: {}
+global_imports:
+- module: collections
+  submodule: Counter
+- module: pprint
+  submodule: pprint
+- module: sqlite3
+  submodule: connect
+- module: pandas as pd
+- module: numpy as np
+- module: scipy.sparse
+  submodule: coo_matrix
+exercises:
+  inverted_dictionary:
+    num: 0
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_inverted_dictionary
+      inputs:
+        d:
+          dtype: dict
+          check_modified: true
+        allow_dup_vals:
+          dtype: bool
+          check_modified: true
+        allow_unhashable_vals:
+          dtype: bool
+          check_modified: true
+      outputs:
+        error_raised:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+        inverted_dictionary_output:
+          index: 1
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  concatenate_quotes:
+    num: 1
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_concatenate_quotes
+      inputs:
+        conn:
+          dtype: db
+          check_modified: false
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: true
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  extract_article_words:
+    num: 2
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_extract_article_words
+      inputs:
+        record:
+          dtype: dict
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  count_articles:
+    num: 3
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_count_articles
+      inputs:
+        running_count:
+          dtype: collections.Counter
+          check_modified: true
+        article_words:
+          dtype: ''
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  record_examiner:
+    num: 4
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_record_examiner
+      inputs:
+        some_iter:
+          dtype: ''
+          check_modified: true
+        map_func:
+          dtype: ''
+          check_modified: true
+        red_func:
+          dtype: ''
+          check_modified: true
+        initial:
+          dtype: ''
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  conn_to_df:
+    num: 5
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_conn_to_df
+      inputs:
+        conn:
+          dtype: db
+          check_modified: false
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: false
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  species_count:
+    num: 6
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_species_count
+      inputs:
+        char_df:
+          dtype: ''
+          check_modified: true
+        spec_df:
+          dtype: ''
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  count_values:
+    num: 7
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_count_values
+      inputs:
+        s:
+          dtype: ''
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  mat_vec_div:
+    num: 8
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_mat_vec_div
+      inputs:
+        A:
+          dtype: ''
+          check_modified: true
+        x:
+          dtype: ''
+          check_modified: true
+      outputs:
+        result:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 0.001
+  df_to_coo:
+    num: 9
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
+    config:
+      case_file: tc_df_to_coo
+      inputs:
+        df:
+          dtype: ''
+          check_modified: true
+        shape:
+          dtype: ''
+          check_modified: true
+      outputs:
+        shape:
+          index: 0
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+        data:
+          index: 1
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+        row:
+          index: 2
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+        col:
+          index: 3
+          dtype: ''
+          check_dtype: true
+          check_col_dtypes: true
+          check_col_order: true
+          check_row_order: false
+          check_column_type: true
+          float_tolerance: 1.0e-06
+  load_the_data:
+    num: 10
+    points: 1
+    n_visible_trials: 100
+    n_hidden_trials: 1
