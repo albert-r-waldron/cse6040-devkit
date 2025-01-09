@@ -153,7 +153,7 @@ class AssignmentBlueprint():
             logger.debug(f'Set core["{ex_name}"]["{func_type}"] = {self.core[ex_name][func_type]}')
             return func
         return _register_function
-    
+
     def register_sql_query(self, ex_name, query, doc, include_note=False):
         name = f'{ex_name}_query'
         if include_note:
@@ -313,7 +313,7 @@ class AssignmentBlueprint():
         - Test cells constructed based on registered sampler
         
         '''
-        # sol_func_name
+        
         if isinstance(output_names, str):
             output_names = (output_names,)
         _sol_func_name = sol_func.__name__
