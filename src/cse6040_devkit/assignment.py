@@ -8,6 +8,7 @@ from jinja2 import Environment, PackageLoader
 import cse6040_devkit.plugins 
 import cse6040_devkit.utils
 import dill
+from copy import deepcopy
 from cryptography.fernet import Fernet
 from random import randint
 import logging
@@ -34,14 +35,12 @@ def execute_tests(func,
         try:
             tester.run_test()
             test_case_vars = tester.get_test_vars()
-            print(test_case_vars)
         except Exception as e:
             test_case_vars = tester.get_test_vars()
             print(f'{ex_name} test ran {i} iterations in {time() - ex_start:.2f} seconds')
-            print(str(e))
-            return False, test_case_vars
+            return False, test_case_vars, e
     print(f'{ex_name} test ran {i} iterations in {time() - ex_start:.2f} seconds')
-    return True, test_case_vars
+    return True, test_case_vars, None
 
 class AssignmentBlueprint():
     def __init__(self,
@@ -55,6 +54,18 @@ class AssignmentBlueprint():
         logger.info(f'''Constructing AssignmentBlueprint:
         {keys_path=}
         {include_hidden=}''')
+        if not os.path.exists('./data'):
+            logger.info("Creating directory ./data")
+            os.makedirs('./data')
+        if not os.path.exists('./resource/asnlib/publicdata'):
+            logger.info("Creating directory ./resource/asnlib/publicdata")
+            os.makedirs('./resource/asnlib/publicdata')
+        if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
+            logger.info("Creating directory ./resource/asnlib/publicdata/encrypted")
+            os.makedirs('./resource/asnlib/publicdata/encrypted')
+        self.publicdata_path = './resource/asnlib/publicdata'
+        self.data_path = './data'
+        self._copy_to_publicdata()
         self.core = {}
         self.included = {}
         self.keys_path = keys_path
@@ -72,6 +83,16 @@ class AssignmentBlueprint():
             }
             with open(self.keys_path, 'wb') as f:
                 dill.dump(self.keys, f)
+    def _copy_to_publicdata(self):
+        import os
+        import shutil
+        publicdata_files = set(os.listdir(self.publicdata_path))
+        data_files = set(os.listdir(self.data_path))
+        un_copied_files = data_files - publicdata_files
+        for fn in un_copied_files:
+            data_fn = f'{self.data_path}/{fn}'
+            publicdata_fn = f'{self.publicdata_path}/{fn}'
+            shutil.copy(data_fn, publicdata_fn)
     def parse_ignore(self, s):
         kept = []
         ignoring = False
@@ -86,7 +107,7 @@ class AssignmentBlueprint():
                 ignoring = False
         return '\n'.join(kept)
     
-    def register_notebook_function(self, ex_name, func_type):
+    def register_notebook_function(self, ex_name, func_type, wrap_solution=False):
         """Decorator that registers a notebook function to the blueprint.
 
         Args:
@@ -105,22 +126,60 @@ class AssignmentBlueprint():
             raise ValueError(f'''func_type must be one of {valid_func_types}''')
         logger.info(f'''Registering {func_type} function for exercise '{ex_name}'.''')
         def _register_function(func):
+            source = self.parse_ignore(inspect.getsource(func))
+            source = cse6040_devkit.utils.extract_definition(source)
             self.core[ex_name] = self.core.get(ex_name, {})
             self.core[ex_name][func_type] = {
                 'name': func.__name__,
-                'source': self.parse_ignore(inspect.getsource(func)),
+                'source': source,
                 'annotations': {} if func.__annotations__ is None \
                     else{k: str(v).split("'")[1] for k, v in func.__annotations__.items()}
             }
             if func.__doc__:
                 self.core[ex_name][func_type]['docstring'] = dedent(func.__doc__)
                 self.core[ex_name][func_type]['source'] = self.core[ex_name][func_type]['source']\
+                    .replace(f'\n    r"""{func.__doc__}"""', '')\
                     .replace(f'\n    """{func.__doc__}"""', '')
+            if wrap_solution:
+                source_lines = self.core[ex_name][func_type]['source'].splitlines()
+                definition = source_lines[0]
+                body = '\n'.join(source_lines[1:])
+                wrapped_source = f'''{definition}
+    ### BEGIN SOLUTION
+{body}
+    ### END SOLUTION'''
+                self.core[ex_name][func_type]['source'] = wrapped_source
             logger.info(f'''Finished regestering''')
-            logger.info(f'Set core["{ex_name}"]["{func_type}"] = {self.core[ex_name][func_type]}')
+            logger.debug(f'Set core["{ex_name}"]["{func_type}"] = {self.core[ex_name][func_type]}')
             return func
         return _register_function
     
+    def register_sql_query(self, ex_name, query, doc, include_note=False):
+        name = f'{ex_name}_query'
+        if include_note:
+            note = dedent('''
+                            **Note:** the query is read into a Pandas DataFrame for demos and testing.
+                          ''').strip()
+        else:
+            note = ''
+        self.core[ex_name] = self.core.get(ex_name, {})
+        self.core[ex_name]['solution'] = {
+            'name': name,
+            'source': dedent(rf"""
+                {name} = '''YOUR QUERY HERE'''
+                ### BEGIN SOLUTION
+                {name} = '''{query}'''
+                ### END SOLUTION
+                """).rstrip(),
+            'annotations': {},
+            'docstring': dedent(f'''
+                {dedent(doc)}
+                
+                {note}''').strip()
+        }
+        return cse6040_devkit.utils.QueryString(query, ex_name)
+
+
     def _register_included_function(self, func_type):
         def _registered_function(func):
             func_name = func.__name__
@@ -157,7 +216,7 @@ class AssignmentBlueprint():
         '''
         return self._register_included_function('utils')
     
-    def register_solution(self, ex_name: str, free: bool=False):
+    def register_solution(self, ex_name: str, free: bool=False, wrap_solution=True):
         '''Decorator factory which registers a function as a solution for the exercise identified by `ex_name`.
 
         **Effects**:
@@ -169,9 +228,9 @@ class AssignmentBlueprint():
         self.core[ex_name] = self.core.get(ex_name, {})
         self.core[ex_name]['free'] = free
 
-        return self.register_notebook_function(ex_name, 'solution')
+        return self.register_notebook_function(ex_name, 'solution', (wrap_solution and not free))
     
-    def register_demo(self, ex_name: str):
+    def register_demo(self, ex_name: str, return_values_transformer=None, return_replacement=None):
         '''Decorator factory which registers a function as a demo for the exercise identified by `ex_name`.
 
         **Effects**:
@@ -181,7 +240,46 @@ class AssignmentBlueprint():
         - Docstring will be rendered at the top of the "test cell boilerplate" cell for the exercise on build
             - Best practice is to use the docstring to inform students of the expected demo output
         '''
-        return self.register_notebook_function(ex_name, 'demo')
+        def _register_demo(func):
+            captured_output, \
+            raw_return_values, \
+            displayable_return_values = cse6040_devkit.utils.capture_output(func, return_values_transformer)
+            if raw_return_values is not None:
+                self.register_preload_object(ex_name, raw_return_values, f'demo_result_{ex_name}_TRUE')
+            func_type = 'demo'
+            self.core[ex_name] = self.core.get(ex_name, {})
+            self.core[ex_name][func_type] = {
+                'name': func.__name__,
+                'source': self.parse_ignore(inspect.getsource(func)),
+                'annotations': {},
+                'return_replacement': return_replacement
+            }
+            if func.__doc__:
+                self.core[ex_name][func_type]['docstring'] = dedent(func.__doc__)
+                self.core[ex_name][func_type]['source'] = self.core[ex_name][func_type]['source']\
+                    .replace(f'\n    r"""{func.__doc__}"""', '')\
+                    .replace(f'\n    """{func.__doc__}"""', '')
+            else:
+                self.core[ex_name][func_type]['docstring'] = ''
+            logger.info(f'''Finished regestering''')
+            logger.debug(f'Set core["{ex_name}"]["{func_type}"] = {self.core[ex_name][func_type]}')
+            captured_output_doc = '' if not captured_output else \
+                f'''
+**The demo should display this printed output.**
+```
+{dedent(captured_output).strip()}
+```
+'''
+            rendered_output_doc = '' if not displayable_return_values else \
+                f'''
+**The demo should display this output.**  
+
+{displayable_return_values.strip()}
+'''
+            self.core[ex_name][func_type]['docstring'] += f'''
+{rendered_output_doc}{captured_output_doc}
+'''
+        return _register_demo
     
     def register_helper(self, ex_name):
         '''Decorator factory which registers a function as a helper for the exercise identified by `ex_name`.
@@ -215,8 +313,13 @@ class AssignmentBlueprint():
         - Test cells constructed based on registered sampler
         
         '''
+        # sol_func_name
         if isinstance(output_names, str):
             output_names = (output_names,)
+        _sol_func_name = sol_func.__name__
+        _argspec = getattr(sol_func, '__argspec__', None)
+        if _argspec is None:
+            _argspec = inspect.getfullargspec(sol_func)
         def _register_sampler(sampler_func):
             logger.info(f"Registering sampler function {sampler_func.__name__} for exercise {ex_name}")
             self.core[ex_name] = self.core.get(ex_name, {})
@@ -229,22 +332,23 @@ class AssignmentBlueprint():
             else:
                 self.core[ex_name]['test']['include_hidden'] = self.include_hidden
             seed = self.keys['rng_seed']
+
             if plugin:
                 if plugin not in dir(cse6040_devkit.plugins):
                     raise ModuleNotFoundError(f'The plugin {plugin} is not defined in the plugins file.')
-                plugged_in_name = f'plugins.{plugin}({sol_func.__name__}{", **plugin_kwargs" if plugin_kwargs else ""})'
+                plugged_in_name = f'plugins.{plugin}({_sol_func_name}{", **plugin_kwargs" if plugin_kwargs else ""})'
                 self.core[ex_name]['test']['sol_func_name'] = plugged_in_name
                 tc_gen = SampleGenerator(getattr(cse6040_devkit.plugins, plugin)(sol_func, **plugin_kwargs), sampler_func, output_names, seed=seed)
             else:
-                self.core[ex_name]['test']['sol_func_name'] = sol_func.__name__
+                self.core[ex_name]['test']['sol_func_name'] = _sol_func_name
                 tc_gen = SampleGenerator(sol_func, sampler_func, output_names, seed=seed)
-            tc_gen.make_inputs()
+            tc_gen.make_inputs() # needed to set the db_key below
             self.core[ex_name]['test']['db_key'] = tc_gen.db_key
             self.core[ex_name]['test']['tc_gen'] = tc_gen
             self.core[ex_name]['test']['visible_key'] = self.keys['visible_key']
             self.core[ex_name]['test']['hidden_key'] = self.keys['hidden_key']
             self.core[ex_name]['test']['output_names'] = output_names
-            self.core[ex_name]['test']['sol_func_argspec'] = inspect.getfullargspec(sol_func)
+            self.core[ex_name]['test']['sol_func_argspec'] = _argspec
             if extra_param_names:
                 for arg in extra_param_names:
                     self.core[ex_name]['test']['sol_func_argspec'].args.append(arg)
@@ -275,9 +379,11 @@ class AssignmentBuilder(AssignmentBlueprint):
                  keys_path='keys.dill',
                  header=True,
                  include_hidden=True,
+                 data_path='data',
+                 publicdata_path='resource/asnlib/publicdata',
                  kernelspec={'kernelspec': {"display_name": "Python 3.8",
-                                       "language": "python",
-                                       "name": "python38"}}):
+                                            "language": "python",
+                                            "name": "python38"}}):
         """Assignment Builders are an extension of blueprints. In addition to being able to register components, AssignmentBuilders can register other blueprints and build all of the components into a Jupyter notebook.
 
         Args:
@@ -293,15 +399,6 @@ class AssignmentBuilder(AssignmentBlueprint):
         self.header = header
         self.kernelspec = kernelspec
         logger.info(f'\n{config_path=}\n{notebook_path=}\n{header=}\n{include_hidden=}\n{kernelspec}')
-        if os.path.exists(config_path):
-            logger.info('Loading config from file')
-            with open(config_path) as f:
-                self.config = yaml.safe_load(f)
-            logger.info('Config loaded')
-        else:
-            logger.info('Config file not found')
-            self.config = {}
-            logger.info('Config initialized')
         if os.path.exists(notebook_path):
             logger.info(f'Loading notebook from file')
             with open(notebook_path) as f:
@@ -311,6 +408,19 @@ class AssignmentBuilder(AssignmentBlueprint):
             self.nb = nbf.v4.new_notebook()
             logger.info('Notebook initialized')
         self.env = Environment(loader=PackageLoader('cse6040_devkit'))
+        self.data_path = data_path
+        self.publicdata_path = publicdata_path
+
+    def _load_config_from_file(self):
+        if os.path.exists(self.config_path):
+            logger.info('Loading config from file')
+            with open(self.config_path) as f:
+                self.config = yaml.safe_load(f)
+            logger.info('Config loaded')
+        else:
+            logger.info('Config file not found')
+            self.config = {}
+            logger.info('Config initialized')
 
     def register_blueprint(self, other):
         """Registers a blueprint to the AssignmentBuilder
@@ -331,9 +441,12 @@ class AssignmentBuilder(AssignmentBlueprint):
                 for func_type, attributes in other.core[ex_name].items():
                     logger.info(f'Registering {func_type} function for exercise {ex_name}')
                     if func_type in self.core[ex_name]:
-                        # function type already registered - ERROR condition
-                        logger.error(f'''Can not register duplicates of the same function type and exercise. The name {ex_name}.{func_type} already exists.''')
-                        raise ValueError(f'''Can not register duplicates. The name {ex_name}.{func_type} already exists.''')
+                        if func_type == 'preload_objects':
+                            self.core[ex_name][func_type].update(attributes)
+                        else:
+                            # function type already registered - ERROR condition
+                            logger.error(f'''Can not register duplicates of the same function type and exercise. The name {ex_name}.{func_type} already exists.''')
+                            raise ValueError(f'''Can not register duplicates. The name {ex_name}.{func_type} already exists.''')
                     else:
                         # function type not already registered
                         self.core[ex_name][func_type] = attributes
@@ -344,6 +457,7 @@ class AssignmentBuilder(AssignmentBlueprint):
                 self.core[ex_name] = other.core[ex_name]
                 logger.info(f'Registered.')
         self.included.update(other.included)
+        logger.debug(f'{self.core=}')
 
     def register_blueprints(self, others):
         """Registers a collection of blueprints to the builder
@@ -356,6 +470,9 @@ class AssignmentBuilder(AssignmentBlueprint):
         for other in others:
             self.register_blueprint(other)
 
+    def get_tc_gen(self, ex_name):
+        return self.core.get(ex_name, {}).get('test', {}).get('tc_gen')
+    
     def _write_nb(self):
         logger.info(f'Writing notebook to {self.notebook_path}')
         self.nb.metadata = self.kernelspec
@@ -399,10 +516,14 @@ class AssignmentBuilder(AssignmentBlueprint):
                        'topics': 'this, that, and the other',
                        'points_cap': 'points cap',
                        'total_points': 'total points',
-                       'global_imports': None,
+                       'global_imports': [{'module': 're'},
+                                          {'module': 'pandas', 'alias': 'pd'}],
                        'exercises': {}}
         logger.info(f"Updating default values with config read from file.")
         temp_config.update(self.config)
+        ###
+        temp_config['exercises'] = {k:v for k, v in temp_config['exercises'].items() if k in self.core}
+        ###
         self.config = temp_config
         logger.info(f"Top level config set. Updating exercise configurations.")
         for ex_num, (ex_name, ex) in enumerate(self.core.items()):
@@ -433,7 +554,6 @@ class AssignmentBuilder(AssignmentBlueprint):
                         'check_col_dtypes': True,
                         'check_col_order': True,
                         'check_row_order': False,
-                        'check_column_type': True,
                         'float_tolerance': 0.000001
                     }
                 for i, var_name in enumerate(ex_test['output_names'])}
@@ -451,6 +571,15 @@ class AssignmentBuilder(AssignmentBlueprint):
                     logger.info(f"Plugin kwarg mapping persisted")
                 logger.info(f"Updating exercise {ex_name} with values from file.")
             temp_exercise.update(self.config['exercises'].get(ex_name, {}))
+            ###
+            existing_config = deepcopy(self.config['exercises'].get(ex_name, {}).get('config'))
+            if existing_config:
+                existing_inputs = existing_config['inputs']
+                existing_outputs = existing_config['outputs']
+                temp_exercise['config']['inputs'] = {k: existing_inputs.get(k, v) for k, v in inputs.items()}
+                temp_exercise['config']['outputs'] = {k: existing_outputs.get(k, v) for k, v in outputs.items()}
+                temp_exercise['config']['case_file'] = f'tc_{ex_name}'
+            ###
             self.config['exercises'][ex_name] = temp_exercise
             logger.info(f"Completed update of exercise {ex_name} configuration.")
         with open(self.config_path, 'w') as f:
@@ -488,7 +617,7 @@ class AssignmentBuilder(AssignmentBlueprint):
         # update exercises
         logger.info(f"Building exercise cell groups")
         for ex_num, (ex_name, ex) in enumerate(exercises_core_config.items()):
-            ex_str = 'for exercise {ex_name}'
+            ex_str = f'for exercise {ex_name}'
             preload_objects = ex.get('preload_objects')
             if preload_objects:
                 logger.info(f"Building preload objects cell {ex_str}")
@@ -513,23 +642,17 @@ class AssignmentBuilder(AssignmentBlueprint):
             helper_source = ex.get('helper', {}).get('source')
             if helper_source:
                 logger.info("Adding helper function")
-                helper_source = '\n'.join(helper_source.splitlines()[1:])
-            demo_source = ex.get('demo', {}).get('source')
+                # helper_source = '\n'.join(helper_source.splitlines()[1:])
+            ex_demo = ex.get('demo', {})
+            demo_source = ex_demo.get('source')
+            demo_return_replacement = ex_demo.get('return_replacement', '')
             if demo_source:
                 logger.info("Adding demo")
-                import re
-                demo_source = demo_source.splitlines()[2:]
-                if re.search(r'^\s*return .*', demo_source[-1]):
-                    logger.info(f"Return statement found. Suppressing in target notebook.")
-                    demo_source = demo_source[:-1]
-                else:
-                    logger.info(f"No return statement found in demo.")
-                demo_source = '\n'.join(demo_source)
-                demo_source = dedent(demo_source)
+                demo_source = cse6040_devkit.utils.replace_return(demo_source, demo_return_replacement)
             cleaned_solution_code = ex.get('solution', {}).get('source')
             if cleaned_solution_code:
                 logger.info(f"Solution code is registered {ex_str}.")
-                cleaned_solution_code = '\n'.join(cleaned_solution_code.splitlines()[1:])
+                # cleaned_solution_code = '\n'.join(cleaned_solution_code.splitlines()[1:])
                 self.core_cells[f'{ex_name}.solution'] = \
                     self._create_code_cell(ex_name=ex_name,
                                            tag='solution',
@@ -578,27 +701,30 @@ class AssignmentBuilder(AssignmentBlueprint):
     
     def _write_artifact_files(self):
         logger.info(f"Writing artifact files")
-        for ex in self.core.values():
+        for ex_name, ex in self.core.items():
             test = ex.get('test')
             if test and (not ex.get('free', False)):
-                logger.info(f"Writing test case files for {ex.get('name')}")
+                logger.info(f"Writing test case files for {ex_name}")
                 tc_gen = test['tc_gen']
                 tc_gen.write_cases(test['visible_path'], test['n_cases'], key=self.keys['visible_key'])
                 tc_gen.write_cases(test['hidden_path'], test['n_cases'], key=self.keys['hidden_key'])
             else:
-                logger.info(f"No test cases to write for {ex.get('name')}")
+                logger.info(f"No test cases to write for {ex_name}")
             preload_objects = ex.get('preload_objects')
             if preload_objects:
                 for obj_name, obj in preload_objects.items():
-                    logger.info(f"Writing preload object file {obj_name} for {ex.get('name')}")
+                    logger.info(f"Writing preload object file {obj_name} for {ex_name}")
                     cse6040_devkit.utils.dump_object_to_publicdata(obj, obj_name)
         logger.info("Writing 'execute_tests' file.")
         cse6040_devkit.utils.dump_object_to_publicdata(execute_tests, 'execute_tests')
         for _, funcs in self.included.items():
             for func_name, func in funcs.items():
+                new_func = deepcopy(func)
+                new_func.__module__ = '__main__'
                 logger.info(f"Writing '{func_name}' file.")
-                cse6040_devkit.utils.dump_object_to_publicdata(func, func_name)
+                cse6040_devkit.utils.dump_object_to_publicdata(new_func, func_name)
         logger.info("Artifact files successfully written.")
+                
 
     def build(self):
         """Builds an assignment based on the components registered to the builder. The target notebook will be cleared of output, execution count, and environment metadata.
@@ -612,12 +738,7 @@ class AssignmentBuilder(AssignmentBlueprint):
             - The current sequence of cells is maintained as-is
             - Any new core cells are appended to the end of the target notebook
         """
-        if not os.path.exists('./resource/asnlib/publicdata'):
-            logger.info("Creating directory ./resource/asnlib/publicdata")
-            os.makedirs('./resource/asnlib/publicdata')
-        if not os.path.exists('./resource/asnlib/publicdata/encrypted'):
-            logger.info("Creating directory ./resource/asnlib/publicdata/encrypted")
-            os.makedirs('./resource/asnlib/publicdata/encrypted')
+        self._load_config_from_file()
         self._update_config_from_core()
         self._write_artifact_files()
         core_cells = self._build_core_cells()
@@ -625,11 +746,13 @@ class AssignmentBuilder(AssignmentBlueprint):
         logger.info(f"Iterating over cells in {self.notebook_path}")
         for cell in self.nb.cells:
             tags = cell.metadata.get('tags')
+            tag_match_core_cell = False
             if tags:
+                tag_match_core_cell = (tags[0] in core_cells)
                 logger.info(f"Found tags {tags} in existing notebook")
             else:
                 logger.info(f"Cell is untagged")
-            tag_match_core_cell = (tags[0] in core_cells)
+            
             if tags and tag_match_core_cell:
                 logger.info(f"Core cell with tag {tags[0]} found. Updating from this AssignmentBuilder")
                 final_nb.cells.append(core_cells.pop(tags[0]))

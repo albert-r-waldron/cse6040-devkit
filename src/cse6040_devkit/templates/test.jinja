@@ -7,22 +7,23 @@ with open('resource/asnlib/publicdata/execute_tests', 'rb') as f:
     plugin_kwargs = utils.load_object_from_publicdata('{{ ex_name }}_plugin_kwargs')
 {% endif %}
 # Execute test
-passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
+passed, test_case_vars, e = execute_tests(func={{ ex.test.sol_func_name }},
               ex_name='{{ ex_name }}',
               key={{ ex.test.visible_key }}, 
               n_iter={{ ex.n_visible_trials }})
 # Assign test case vars for debugging
 input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
-
+if e: raise e
 assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 
 {% if ex.test.include_hidden %}### BEGIN HIDDEN TESTS
-passed, test_case_vars = execute_tests(func={{ ex.test.sol_func_name }},
+passed, test_case_vars, e = execute_tests(func={{ ex.test.sol_func_name }},
               ex_name='{{ ex_name }}',
               key={{ ex.test.hidden_key }}, 
               n_iter={{ ex.n_hidden_trials }},
               hidden=True)
 input_vars, original_input_vars, returned_output_vars, true_output_vars = test_case_vars
+if e: raise e
 assert passed, 'The solution to {{ ex_name }} did not pass the test.'
 ### END HIDDEN TESTS{% endif %}{% endif %}
 print('Passed! Please submit.')

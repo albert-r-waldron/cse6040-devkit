@@ -26,11 +26,16 @@ class Tester(ExerciseTester):
                                         if self.conf_inputs[k]['check_modified']}   
     
     def check_modified(self):
-        for var_name in self.input_vars:
+        for var_name in self.original_input_vars:
             if not self.conf_inputs[var_name]['check_modified']: continue
             import pandas as pd
             import numpy as np
-            if isinstance(self.original_input_vars[var_name], pd.DataFrame):
+            if isinstance(self.original_input_vars[var_name], pd.Series):
+                try:
+                    pd.testing.assert_series_equal(self.original_input_vars[var_name], self.input_vars[var_name])
+                except AssertionError:
+                    assert False, f'Your solution modified the input variable `{var_name}`. You can use the testing variables for debugging.'
+            elif isinstance(self.original_input_vars[var_name], pd.DataFrame):
                 try:
                     pd.testing.assert_frame_equal(self.original_input_vars[var_name], self.input_vars[var_name])
                 except AssertionError:
@@ -38,7 +43,8 @@ class Tester(ExerciseTester):
             elif isinstance(self.original_input_vars[var_name], np.ndarray):
                 assert (self.input_vars[var_name] == self.original_input_vars[var_name]).all(), f'Your solution modified the input variable `{var_name}`. You can use the testing variables for debugging.'
             else:
-                assert self.input_vars[var_name] == self.original_input_vars[var_name], f'Your solution modified the input variable `{var_name}`. You can use the testing variables for debugging.'
+                condition = self.input_vars[var_name] == self.original_input_vars[var_name]
+                assert condition, f'Your solution modified the input variable `{var_name}`. You can use the testing variables for debugging.'
     
     def run_test(self, func=None):
         return super().run_test(self.func)
@@ -96,3 +102,18 @@ Output for {out_key} is incorrect.
 The returned result is available as `returned_output_vars['{out_key}']`
 The expected result is available as `true_output_vars['{out_key}']`
             '''
+
+
+def get_tester(func,
+                  ex_name,
+                  key,
+                  hidden=False,
+                  conf_path='resource/asnlib/publicdata/assignment_config.yaml',
+                  path = 'resource/asnlib/publicdata/'):
+    from yaml import safe_load
+    if hidden: path += 'encrypted/'
+    with open(conf_path) as f:
+        ex_conf = safe_load(f)['exercises'][ex_name]['config']
+    ex_conf['func'] = func
+    tester = Tester(ex_conf, key, path)
+    return tester
