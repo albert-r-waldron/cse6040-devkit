@@ -279,6 +279,7 @@ class AssignmentBlueprint():
             self.core[ex_name][func_type]['docstring'] += f'''
 {rendered_output_doc}{captured_output_doc}
 '''
+            return func
         return _register_demo
     
     def register_helper(self, ex_name):
