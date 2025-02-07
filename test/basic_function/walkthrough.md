@@ -32,12 +32,11 @@ The assignment framework has a few levels of hierarchy.
 
 In practice we use decorators to register Python functions as exercise components under an `AssignmentBlueprint` object, and then register all blueprints under an `AssignmentBuilder` object. Finally we invoke the builder's `build` method to create the assignment notebook.
 
-
 ## Solution components
 
-These define the "correct" solution. 
+These define the "correct" solution.
 
-Using the `register_solution` decorator will register the decorated function as the solution for an exercise. 
+Using the `register_solution` decorator will register the decorated function as the solution for an exercise.
 
 Optionally, solutions can be designated as "free", and strings can be processed as SQL queries.
 
@@ -49,11 +48,11 @@ Using the `register_helper` decorator will register the decorated function as th
 
 ## Demo components
 
-These define the "demo" for an exercise. 
+These define the "demo" for an exercise.
 
 Using the `register_demo` decorator will register the decorated function as the demo for an exercise.
 
-Demos should define (or load) simplified inputs, call the solution with those inputs, and display the result. 
+Demos should define (or load) simplified inputs, call the solution with those inputs, and display the result.
 
 Registration will capture printed output and display it as text in the markdown, giving the students a visual to compare with.
 
@@ -69,7 +68,7 @@ Optional arguments allow tests to use plugins, which can allow testing a wider v
 
 ## Plugins
 
-A plugin is a function which takes the solution and produces a function that uses the solution to derive additional results. 
+A plugin is a function which takes the solution and produces a function that uses the solution to derive additional results.
 
 One useful example is a plugin which catches runtime errors that a solution is required to raise under certain input conditions. (Solutions raising runtime errors is not allowed in the testing framework.)
 
