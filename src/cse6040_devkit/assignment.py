@@ -140,7 +140,9 @@ class AssignmentBlueprint():
                 self.core[ex_name][func_type]['source'] = self.core[ex_name][func_type]['source']\
                     .replace(f'\n    r"""{func.__doc__}"""', '')\
                     .replace(f'\n    """{func.__doc__}"""', '')
-            if wrap_solution:
+            if wrap_solution and \
+                '### BEGIN SOLUTION' not in self.core[ex_name][func_type]['source']:
+                
                 source_lines = self.core[ex_name][func_type]['source'].splitlines()
                 definition = source_lines[0]
                 body = '\n'.join(source_lines[1:])
