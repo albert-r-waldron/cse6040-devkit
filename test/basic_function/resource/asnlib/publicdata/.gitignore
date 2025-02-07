@@ -1,0 +1,4 @@
+*
+encrypted/*
+!assignment_config.yaml
+!.gitignore
