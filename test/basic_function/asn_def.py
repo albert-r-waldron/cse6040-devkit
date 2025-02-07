@@ -138,8 +138,6 @@ def species_count_demo():
         plugins.sql_executor(species_count_query)(conn)
     return demo_result_species_count
 
-
-
 builder = assignment.AssignmentBuilder()
 builder.register_blueprint(bp)
 
