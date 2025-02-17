@@ -20,7 +20,10 @@ def fizzbuzz_soln(x: int):
 - `'FizzBuzz'` if i is divisible by both 3 and 5     Example: 45
 - `i`          if i is divisible by neither 3 nor 5  Example: 22
     """
+    print('an extra statement')
+    ### BEGIN SOLUTION
     return ("Fizz"*x_divides_y(3, x)+"Buzz"*x_divides_y(5, x)) or x
+    ### END SOLUTION
 
 # Register an exercise helper function
 # Helper function source code is included in the notebook
@@ -95,9 +98,9 @@ bp.register_preload_object('freebie', free_data, 'free_data')
 species_count_query = \
     bp.register_sql_query(ex_name='species_count',
                           query='''
-                                      select species, count(1) as "count"
-                                      from characters
-                                      group by species
+                                    select species, count(1) as "count"
+                                    from characters
+                                    group by species
                                   ''',
                           doc='''
                                   The query should return these columns
@@ -128,8 +131,8 @@ def species_count_samp(rng: np.random.Generator):
 
 # Register a demo
 @bp.register_demo('species_count',
-                  return_replacement='display(demo_result_species_count.head())',
-                  return_values_transformer=lambda df: df.head().to_markdown())
+                    return_replacement='display(demo_result_species_count.head())',
+                    return_values_transformer=lambda df: df.head().to_markdown())
 def species_count_demo():
     from cse6040_devkit.tester_fw.test_utils \
         import dfs_to_conn

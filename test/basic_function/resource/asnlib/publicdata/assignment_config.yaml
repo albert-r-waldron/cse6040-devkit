@@ -17,7 +17,7 @@ exercises:
     config:
       case_file: tc_fizzbuzz
       inputs:
-        z:
+        x:
           dtype: int
           check_modified: true
       outputs:
